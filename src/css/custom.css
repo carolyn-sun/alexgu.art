@@ -28,3 +28,24 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+@font-face {
+    font-family: 'Saira';
+    src: url("../../static/fonts/Saira.ttf") format('truetype');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url("../../static/fonts/Montserrat.ttf") format('truetype');
+}
+
+:root {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+}

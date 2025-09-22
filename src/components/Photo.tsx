@@ -14,12 +14,15 @@ const Photo: React.FC<PhotoProps> = ({ src, json }) => {
         <div>
             <img src={src} alt="photo" style={{ maxWidth: '100%', borderRadius: 8, boxShadow: '0 2px 8px #ccc' }} />
             {json && (
-                <table style={{ marginTop: 12, borderCollapse: 'collapse', width: '100%', fontSize: 14, fontFamily: 'Saira-Medium, monospace'}}>
+                <table style={{ marginTop: 12,
+                    borderCollapse: 'collapse',
+                    width: '100%',
+                    fontSize: '14px',
+                    fontFamily: 'Saira'}}>
                     <tbody>
                         {Object.entries(json).map(([key, value]) => (
                             <tr key={key}>
                                 <td style={{
-                                    fontWeight: '500px',
                                     padding: '4px 8px',
                                     borderBottom: '1px solid #eee',
                                     width: 160
