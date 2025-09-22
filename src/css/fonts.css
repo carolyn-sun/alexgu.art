@@ -1,0 +1,5 @@
+/* src/styles/fonts.css */
+@font-face {
+  font-family: 'Saira-Medium';
+  src: url("static/fonts/Saira-Medium.ttf") format("truetype");
+}

@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Alex\' Gallery',
+  title: 'Alexander Gu',
   tagline: '',
   favicon: 'img/favicon.ico',
 
@@ -69,13 +69,13 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Alexander\'s Gallery',
+      title: 'Alexander Gu',
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Gallery',
         },
       ],
     },
