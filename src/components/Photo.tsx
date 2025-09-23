@@ -18,7 +18,8 @@ const Photo: React.FC<PhotoProps> = ({ src, json }) => {
                     borderCollapse: 'collapse',
                     width: '100%',
                     fontSize: '14px',
-                    fontFamily: 'Saira'}}>
+                    fontFamily: 'Saira',
+                    fontWeight: 600}}>
                     <tbody>
                         {Object.entries(json).map(([key, value]) => (
                             <tr key={key}>
