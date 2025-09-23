@@ -1,12 +1,11 @@
 import React from 'react';
 
 interface AvatarProps {
-    src: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({src}) => (
+const Avatar: React.FC<AvatarProps> = () => (
     <img
-        src={src}
+        src="/img/avatar.jpg"
         alt="avatar"
         style={{
             width: 64,
