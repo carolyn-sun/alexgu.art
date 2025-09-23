@@ -19,8 +19,7 @@ Here is the place where I would post some of the photos I take.
 * Fujifilm GFX100S
 
 ### 135 (Film)
-
-* GENBAKANTOKU ZOOM
+* Konica GENBAKANTOKU ZOOM
 * CONTAX G1 & G2
 * Nikon F4S
 
