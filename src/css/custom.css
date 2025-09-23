@@ -40,19 +40,25 @@
 }
 
 @font-face {
-    font-family: 'Helvetica';
-    src: url("../../static/fonts/Helvetica.ttf") format('truetype');
+    font-family: 'Noto Sans';
+    src: url("../../static/fonts/NotoSans.ttf") format('truetype');
 }
 
 body {
-    font-family: 'Helvetica', sans-serif;
-    font-weight: 500;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
 }
 
 :root {
-    --ifm-font-family-base: 'Montserrat', sans-serif;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+}
+
+.navbar {
+    font-family: 'Montserrat', sans-serif;
 }
 
 table {
