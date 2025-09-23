@@ -8,7 +8,7 @@ hide_table_of_contents: true
 ### Alexander Gu  
 Analog Lover, likes photography, especially with **film**.  
 
-## This website
+## This Website
 Here is the place where I would post some of the photos I take. 
 
 ## My Equipments (Camera Systems)
@@ -16,6 +16,7 @@ Here is the place where I would post some of the photos I take.
 * iPhone 15 Pro
 * Ricoh GR III
 * Canon 5D Mark IV
+* Leica M9
 * Fujifilm GFX100S
 
 ### 135 (Film)
@@ -28,4 +29,7 @@ Here is the place where I would post some of the photos I take.
 
 ### Large Format (Film)
 * Linhof Technikardan S45
+
+## Contact Me
+Email: gjc78263@gmail.com
 
