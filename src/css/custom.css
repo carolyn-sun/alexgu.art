@@ -40,11 +40,6 @@
     src: url("../../static/fonts/Montserrat.ttf") format('truetype');
 }
 
-:root {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-}
-
 body {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
