@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "node src/scripts/generate-exif-json.js && node src/scripts/generate-index-mdx.js",
-    "prestart": "node src/scripts/generate-exif-json.js && node src/scripts/generate-index-mdx.js",
+    "prebuild": "node src/scripts/generate-lqip.js && node src/scripts/generate-exif-json.js && node src/scripts/generate-index-mdx.js",
+    "prestart": "node src/scripts/generate-lqip.js && node src/scripts/generate-exif-json.js && node src/scripts/generate-index-mdx.js",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
