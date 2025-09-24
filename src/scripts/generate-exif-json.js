@@ -54,6 +54,7 @@ async function processDir(dir) {
             continue;
         }
         if (!SUPPORTED_EXT.test(file)) continue;
+        if (/_lq\.jpe?g$/i.test(file)) continue;
 
         const jsonPath = join(dir, `${basename(file, extname(file))}.json`);
         if (await fileExists(jsonPath)) {

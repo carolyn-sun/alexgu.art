@@ -33,7 +33,7 @@ async function shouldSkip(dir) {
 
 async function getImageFiles(dir) {
     const files = await readdir(dir);
-    return files.filter(f => SUPPORTED_EXT.test(f));
+    return files.filter(f => SUPPORTED_EXT.test(f) && !/\.lq\.jpe?g$/i.test(f));
 }
 
 async function gitAdd(file) {
@@ -59,18 +59,23 @@ async function processFolders(root) {
 
         const importLines = images.flatMap(img => {
             const imgVar = toVarName(img);
+            const lqipFile = `${basename(img, extname(img))}.lq.jpeg`;
+            const lqipVar = toVarName(lqipFile) + 'LQ';
             const jsonFile = `${basename(img, extname(img))}.json`;
             const jsonVar = toVarName(jsonFile) + 'JSON';
             return [
                 `import ${imgVar} from "./${img}";`,
+                `import ${lqipVar} from "./${lqipFile}";`,
                 `import ${jsonVar} from "./${jsonFile}";`
             ];
         });
         const photoLines = images.map(img => {
             const imgVar = toVarName(img);
+            const lqipFile = `${basename(img, extname(img))}.lq.jpeg`;
+            const lqipVar = toVarName(lqipFile) + 'LQ';
             const jsonFile = `${basename(img, extname(img))}.json`;
             const jsonVar = toVarName(jsonFile) + 'JSON';
-            return `<Photo src={${imgVar}} json={${jsonVar}} />`;
+            return `<Photo src={${imgVar}} lqip={${lqipVar}} json={${jsonVar}} />`;
         });
         const mdxLines = [
             `# ${entry.name}`,

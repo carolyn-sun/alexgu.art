@@ -6,6 +6,9 @@
 # Run chmod +x fix-name.sh to make it executable.
 
 find docs/ -type f \( -name "* *" -o -name "*-*" -o -name "*_*" \) | while read -r file; do
+    if [[ "$file" == *"_lq."* ]]; then
+        continue
+    fi
     dir=$(dirname "$file")
     base=$(basename "$file")
     if [[ "$base" == _* ]]; then
