@@ -1,7 +1,13 @@
 {
-  "Make": "HEIDELBERG PREPRESS",
-  "Model": "Scanner DC3000",
-  "Orientation": "Horizontal (normal)",
-  "Artist": "Krause, Johansen",
+  "FocalLength": 90,
+  "FNumber": "?",
+  "ExposureTime": "?",
+  "ISO": 100,
+  "Make": "Linhof",
+  "Model": "Technikardan S45",
+  "LensModel": "Schneider 90mm f/5.6 Super-Angulon XL",
+  "WhiteBalance": "Daylight",
+  "Flash": "Flash did not fire",
+  "Artist": "Alexandar Gu",
   "Copyright": "Alexander Gu"
 }
