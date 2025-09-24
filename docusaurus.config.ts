@@ -81,9 +81,14 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      links: [
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} Alexander Gu`,
+      links: [],
+      copyright: `
+        © ${new Date().getFullYear()} by <a href="https://alexgu.art">Alexander Gu</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
+        <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
+        <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
+        <img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
+        <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
+      `,
     },
     prism: {
       theme: prismThemes.github,
