@@ -58,18 +58,18 @@ async function processFolders(root) {
         if (images.length === 0) continue;
 
         const importLines = images.flatMap(img => {
-            const imgVar = toVarName(img);
+            const imgVar = toVarName(img).replace(/[-_]/g, "");
             const jsonFile = `${basename(img, extname(img))}.json`;
-            const jsonVar = toVarName(jsonFile) + 'JSON';
+            const jsonVar = toVarName(jsonFile).replace(/[-_]/g, "") + 'JSON';
             return [
                 `import ${imgVar} from "./${img}";`,
                 `import ${jsonVar} from "./${jsonFile}";`
             ];
         });
         const photoLines = images.map(img => {
-            const imgVar = toVarName(img);
+            const imgVar = toVarName(img).replace(/[-_]/g, "");
             const jsonFile = `${basename(img, extname(img))}.json`;
-            const jsonVar = toVarName(jsonFile) + 'JSON';
+            const jsonVar = toVarName(jsonFile).replace(/[-_]/g, "") + 'JSON';
             return `<Photo src={${imgVar}} json={${jsonVar}} />`;
         });
         const mdxLines = [
