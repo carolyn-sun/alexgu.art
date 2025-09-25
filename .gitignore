@@ -24,3 +24,5 @@ yarn-error.log*
 
 *lq.jpeg
 *lg.jpg
+
+static/lqImages.json
