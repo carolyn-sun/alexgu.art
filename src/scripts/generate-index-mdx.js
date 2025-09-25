@@ -59,7 +59,7 @@ async function processFolders(root) {
 
         const importLines = images.flatMap(img => {
             const imgVar = toVarName(img);
-            const lqipFile = `${basename(img, extname(img))}.lq.jpeg`;
+            const lqipFile = `${basename(img, extname(img))}.jpeg`;
             const lqipVar = toVarName(lqipFile) + 'LQ';
             const jsonFile = `${basename(img, extname(img))}.json`;
             const jsonVar = toVarName(jsonFile) + 'JSON';
@@ -71,7 +71,7 @@ async function processFolders(root) {
         });
         const photoLines = images.map(img => {
             const imgVar = toVarName(img);
-            const lqipFile = `${basename(img, extname(img))}.lq.jpeg`;
+            const lqipFile = `${basename(img, extname(img))}.jpeg`;
             const lqipVar = toVarName(lqipFile) + 'LQ';
             const jsonFile = `${basename(img, extname(img))}.json`;
             const jsonVar = toVarName(jsonFile) + 'JSON';
