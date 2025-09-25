@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const staticDir = path.resolve(__dirname, '../../static');
+const buildDir = path.resolve(__dirname, '../../build');
 const result = [];
 
 function walk(dir) {
@@ -12,13 +12,13 @@ function walk(dir) {
         if (stat.isDirectory()) {
             walk(fullPath);
         } else if (/lq.*\.(jpe?g|png|webp)$/i.test(file)) {
-            result.push(fullPath.replace(staticDir, '').replace(/\\/g, '/'));
+            result.push(fullPath.replace(buildDir, '').replace(/\\/g, '/'));
         }
     }
 }
 
-walk(staticDir);
+walk(buildDir);
 
-const output = path.join(staticDir, 'lqImages.json');
+const output = path.join(buildDir, 'lqImages.json');
 fs.writeFileSync(output, JSON.stringify(result, null, 2));
 console.log('lqImages.json generated.');
