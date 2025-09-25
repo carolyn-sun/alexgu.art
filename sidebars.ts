@@ -16,6 +16,7 @@ const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   gallerySidebar: [
       'index',
+      'Fall/index',
       'Photo Trip to America/index',
       'Photo Trip to Shengshan Island/index',
       'recent photos taken by GFX100S/index'
