@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const buildDir = path.resolve(__dirname, '../../build');
+const staticDir = path.resolve(__dirname, '../../static');
 const result = [];
 
 function walk(dir) {
@@ -21,4 +22,8 @@ walk(buildDir);
 
 const output = path.join(buildDir, 'lqImages.json');
 fs.writeFileSync(output, JSON.stringify(result, null, 2));
+
+const staticOutput = path.join(staticDir, 'lqImages.json');
+fs.writeFileSync(staticOutput, JSON.stringify(result, null, 2));
+
 console.log('lqImages.json generated.');

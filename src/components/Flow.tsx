@@ -28,26 +28,44 @@ const Flow: React.FC = () => {
     }, []);
 
     return (
-        <div style={{display: 'flex', gap: 4}}>
-            {columns.map((col, idx) => (
-                <div key={idx} style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
-                    {col.map((img, i) => (
-                        <img
-                            key={i}
-                            src={img}
-                            alt=""
-                            style={{
-                                width: '100%',
-                                height: 120,
-                                borderRadius: 8,
-                                objectFit: 'cover',
-                                display: 'block'
-                            }}
-                            loading="lazy"
-                        />
-                    ))}
-                </div>
-            ))}
+        <div
+          style={{
+            display: 'flex',
+            gap: 16,
+            padding: 16,
+            background: '#fafbfc',
+            borderRadius: 16,
+            boxShadow: '0 4px 24px rgba(0,0,0,0.08)'
+          }}
+        >
+          {columns.map((col, idx) => (
+            <div
+              key={idx}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16
+              }}
+            >
+              {col.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt=""
+                  style={{
+                    width: '100%',
+                    height: 140,
+                    borderRadius: 12,
+                    objectFit: 'cover',
+                    display: 'block',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.10)'
+                  }}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          ))}
         </div>
     );
 };
