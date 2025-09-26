@@ -43,7 +43,13 @@ const config: Config = {
   presets: [
     [
       'classic',
-      {
+      {sitemap: {
+                    lastmod: 'date',
+                    changefreq: 'weekly',
+                    priority: 0.5,
+                    ignorePatterns: [],
+                    filename: 'sitemap.xml',
+                },
         docs: {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
