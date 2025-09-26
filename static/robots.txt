@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /tags/
+Disallow: /docs/
+Disallow: /blog/tags/
+Disallow: /friends/
+Disallow: /privacy/
+Sitemap: https://carolyn.sh/sitemap.xml
