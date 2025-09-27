@@ -20,7 +20,8 @@ const sidebars: SidebarsConfig = {
       'Photo Trip to America/index',
       'Fall/index',
       'Photo Trip to Shengshan Island/index',
-      'Hajime Sorayama/index'     
+      'Hajime Sorayama/index',
+      'Shanghai Auto Museum/index'     
   ],
 };
 
