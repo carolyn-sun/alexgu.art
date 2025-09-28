@@ -49,4 +49,4 @@ draft: true
 
 ### 文件格式和规范
 
-在每次 commit 以前，会自动运行 `npx lint-staged`，对所有的文件进行格式化，以确保代码风格的一致性。
+在每次 commit 以前，会自动运行`npx lint-staged`，对发生改动的文件进行格式化，以确保代码风格的一致性。亦可以通过运行`npx prettier . --write`来格式化所有文件。
