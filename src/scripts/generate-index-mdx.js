@@ -142,7 +142,7 @@ async function processFolders(root) {
     const mdxLines = [
       `# ${entry.name}`,
       "",
-      `import Photo from '../../src/components/Photo.tsx';`,
+      `import Photo from "../../src/components/Photo.tsx";`,
       "",
       ...uniqImports,
       "",
