@@ -17,6 +17,7 @@ const sidebars: SidebarsConfig = {
   gallerySidebar: [
       'index',
       'Daily Photos Taken by GFX100S/index',
+      'Daily Photos Taken by Film/index',
       'Photo Trip to America/index',
       'Fall/index',
       'Photo Trip to Shengshan Island/index',
