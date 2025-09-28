@@ -3,7 +3,6 @@ const { join, extname, basename } = require("path");
 const { exec } = require("child_process");
 
 const DOCS_DIR = "docs";
-const SUPPORTED_EXT = /\.(jpe?g|tiff?|heic|png)$/i;
 const INDEX_FILES = ["index.mdx", "index.md", "index.html", "index.ts"];
 
 async function fileExists(path) {
