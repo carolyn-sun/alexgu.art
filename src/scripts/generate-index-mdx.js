@@ -1,54 +1,46 @@
-const {readdir, access, writeFile} = require("fs/promises");
-const {join, extname, basename} = require("path");
-const {exec} = require("child_process");
+const { readdir, access, writeFile } = require("fs/promises");
+const { join, extname, basename } = require("path");
+const { exec } = require("child_process");
 
 const DOCS_DIR = "docs";
-const SUPPORTED_EXT = /\.(jpe?g|tiff?|heic|png)$/i;
-const INDEX_FILES = [
-    "index.mdx",
-    "index.md",
-    "index.html",
-    "index.ts"
-];
-
-function toVarName(filename) {
-    return basename(filename, extname(filename)).replace(/[^a-zA-Z0-9_]/g, "_");
-}
+const INDEX_FILES = ["index.mdx", "index.md", "index.html", "index.ts"];
 
 async function fileExists(path) {
-    try {
-        await access(path);
-        return true;
-    } catch {
-        return false;
-    }
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function shouldSkip(dir) {
-    for (const name of INDEX_FILES) {
-        if (await fileExists(join(dir, name))) return true;
-    }
-    return false;
-}
-
-async function getImageFiles(dir) {
-    const files = await readdir(dir);
-    return files.filter(f => SUPPORTED_EXT.test(f) && !/\.lq\.jpe?g$/i.test(f));
+  for (const name of INDEX_FILES) {
+    if (await fileExists(join(dir, name))) return true;
+  }
+  return false;
 }
 
 async function gitAdd(file) {
-    return new Promise((resolve, reject) => {
-        exec(`git add "${file}"`, (err) => {
-            if (err) reject(err);
-            else resolve();
-        });
+  return new Promise((resolve, reject) => {
+    exec(`git add "${file}"`, (err) => {
+      if (err) reject(err);
+      else resolve();
     });
+  });
 }
-
 
 async function processFolders(root) {
   const entries = await readdir(root, { withFileTypes: true });
-  const imageExts = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.tif', '.tiff']);
+  const imageExts = new Set([
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".gif",
+    ".tif",
+    ".tiff",
+  ]);
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
@@ -66,10 +58,10 @@ async function processFolders(root) {
     const groups = new Map(); // baseNoLQ -> { image: fn?, lq: fn?, json: fn? }
 
     for (const f of allFiles) {
-      if (f.startsWith('.')) continue;
+      if (f.startsWith(".")) continue;
       const ext = extname(f).toLowerCase();
       const name = basename(f, extname(f));
-      const baseNoLQ = name.replace(/(?:[-_]?lq)$/i, '');
+      const baseNoLQ = name.replace(/[-_]?lq$/i, "");
 
       let rec = groups.get(baseNoLQ);
       if (!rec) {
@@ -77,11 +69,11 @@ async function processFolders(root) {
         groups.set(baseNoLQ, rec);
       }
 
-      if (ext === '.json') {
+      if (ext === ".json") {
         rec.json = f;
       } else if (imageExts.has(ext)) {
         // 判断是不是带 lq 的文件
-        if (name.match(/(?:[-_]?lq)$/i)) {
+        if (name.match(/[-_]?lq$/i)) {
           rec.lq = f;
         } else {
           // 优先把非-lq 的文件当作主图
@@ -96,9 +88,9 @@ async function processFolders(root) {
 
     function makeVarName(base) {
       // 去掉所有非字母数字，若以数字开头则前面加下划线，然后全部大写
-      let v = base.replace(/[^A-Za-z0-9]/g, '');
-      if (!v) v = base.replace(/[^A-Za-z0-9_]/g, '_'); // 兜底
-      if (/^[0-9]/.test(v)) v = '_' + v;
+      let v = base.replace(/[^A-Za-z0-9]/g, "");
+      if (!v) v = base.replace(/[^A-Za-z0-9_]/g, "_"); // 兜底
+      if (/^[0-9]/.test(v)) v = "_" + v;
       return v.toUpperCase();
     }
 
@@ -134,7 +126,7 @@ async function processFolders(root) {
       props.push(`src={${varBase}}`);
       if (rec.lq) props.push(`lqip={${varBase}LQ}`);
       if (rec.json) props.push(`json={${varBase}JSON}`);
-      photoLines.push(`<Photo ${props.join(' ')} />`);
+      photoLines.push(`<Photo ${props.join(" ")} />`);
     }
 
     // 去重 importLines 并保持顺序（同一文件不会被重复 import）
@@ -149,17 +141,17 @@ async function processFolders(root) {
 
     const mdxLines = [
       `# ${entry.name}`,
-      '',
-      `import Photo from '../../src/components/Photo.tsx';`,
-      '',
+      "",
+      `import Photo from "../../src/components/Photo.tsx";`,
+      "",
       ...uniqImports,
-      '',
-      ...photoLines
+      "",
+      ...photoLines,
     ];
 
-    const mdxContent = mdxLines.join('\n');
-    const mdxPath = join(folder, 'index.mdx');
-    await writeFile(mdxPath, mdxContent, 'utf-8');
+    const mdxContent = mdxLines.join("\n");
+    const mdxPath = join(folder, "index.mdx");
+    await writeFile(mdxPath, mdxContent, "utf-8");
     await gitAdd(mdxPath);
     console.log(`GENERATED: ${mdxPath}`);
   }

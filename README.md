@@ -7,6 +7,7 @@
 ## 前置条件
 
 ### Node.js
+
 - [macOS](https://nodejs.org/dist/v22.19.0/node-v22.19.0.pkg)
 - [Windows](https://nodejs.org/dist/v22.19.0/node-v22.19.0-x64.msi)
 
@@ -34,15 +35,18 @@ draft: true
 
 ### 使用 Code 语法块，以凸显相机参数。
 
-``````markdown
-
+````markdown
 ```textplain
 这是一个大段落的文字，里面包含了相机参数。
 ```
 
 这是出现在文段中的 `相机参数`。
-``````
+````
 
 ### 子页面
 
 在`docs`下的项目文件夹内创建其他的`md`或者`mdx`文件，可以作为子页面，使用相对路径链接添加在`sidebars.ts`中。
+
+### 文件格式和规范
+
+在每次 commit 以前，会自动运行`npx lint-staged`，对发生改动的文件进行格式化，以确保代码风格的一致性。亦可以通过运行`npx prettier . --write`来格式化所有文件。

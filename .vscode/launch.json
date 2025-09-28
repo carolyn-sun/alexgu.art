@@ -1,17 +1,17 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
     {
-        "command": "npm run start",
-        "name": "Run Docusaurus",
-        "request": "launch",
-        "type": "node-terminal"
+      "command": "npm run start",
+      "name": "Run Docusaurus",
+      "request": "launch",
+      "type": "node-terminal"
     },
     {
-        "command": "npm run build",
-        "name": "Build Docusaurus",
-        "request": "launch",
-        "type": "node-terminal"
+      "command": "npm run build",
+      "name": "Build Docusaurus",
+      "request": "launch",
+      "type": "node-terminal"
     }
-    ]
+  ]
 }

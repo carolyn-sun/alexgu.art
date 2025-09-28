@@ -18,7 +18,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #25c2a0;
   --ifm-color-primary-dark: #21af90;
   --ifm-color-primary-darker: #1fa588;
@@ -30,43 +30,50 @@
 }
 
 @font-face {
-    font-family: 'Saira';
-    src: url("../../static/fonts/Saira.ttf") format('truetype');
+  font-family: "Saira";
+  src: url("../../static/fonts/Saira.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Montserrat';
-    src: url("../../static/fonts/Montserrat.ttf") format('truetype');
+  font-family: "Montserrat";
+  src: url("../../static/fonts/Montserrat.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: 'Noto Sans';
-    src: url("../../static/fonts/NotoSans.ttf") format('truetype');
+  font-family: "Noto Sans";
+  src: url("../../static/fonts/NotoSans.ttf") format("truetype");
 }
 
 body {
-    font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
 }
 
 :root {
-    font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .navbar {
-    font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 table {
-    font-family: 'Saira', sans-serif;
-    font-weight: 600;
+  font-family: "Saira", sans-serif;
+  font-weight: 600;
 }
 
-code, pre, .code-block {
-  font-family: 'Saira', monospace !important;
-    font-weight: 600 !important;
+code,
+pre,
+.code-block {
+  font-family: "Saira", monospace !important;
+  font-weight: 600 !important;
 }
