@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const sharp = require('sharp')
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 sharp.concurrency(1);
 sharp.cache(false);
 
-const ROOT = path.join(__dirname, '../../docs');
+const ROOT = path.join(__dirname, "../../docs");
 const MAX_SIZE = 3 * 1024 * 1024; // 3MB
 
 function isJpeg(file) {
@@ -21,7 +21,7 @@ async function processImage(filePath) {
   let quality = 40;
   let buffer;
   const image = sharp(filePath, {
-    limitInputPixels: false
+    limitInputPixels: false,
   });
   const meta = await image.metadata();
   let pipeline = image;
@@ -29,18 +29,18 @@ async function processImage(filePath) {
     pipeline = image.resize({ width: 3000 });
   }
   do {
-    buffer = await pipeline
-      .jpeg({ quality, mozjpeg: true })
-      .toBuffer();
+    buffer = await pipeline.jpeg({ quality, mozjpeg: true }).toBuffer();
     quality -= 5;
   } while (buffer.length > MAX_SIZE && quality > 10);
 
   fs.writeFileSync(lqipPath, buffer);
-  console.log(`GENERATED: ${lqipPath} (${(buffer.length/1024/1024).toFixed(2)}MB)`);
+  console.log(
+    `GENERATED: ${lqipPath} (${(buffer.length / 1024 / 1024).toFixed(2)}MB)`,
+  );
 }
 
 function walk(dir) {
-  fs.readdirSync(dir).forEach(file => {
+  fs.readdirSync(dir).forEach((file) => {
     const full = path.join(dir, file);
     if (fs.statSync(full).isDirectory()) {
       walk(full);

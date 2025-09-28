@@ -7,6 +7,7 @@
 ## 前置条件
 
 ### Node.js
+
 - [macOS](https://nodejs.org/dist/v22.19.0/node-v22.19.0.pkg)
 - [Windows](https://nodejs.org/dist/v22.19.0/node-v22.19.0-x64.msi)
 
@@ -34,14 +35,13 @@ draft: true
 
 ### 使用 Code 语法块，以凸显相机参数。
 
-``````markdown
-
+````markdown
 ```textplain
 这是一个大段落的文字，里面包含了相机参数。
 ```
 
 这是出现在文段中的 `相机参数`。
-``````
+````
 
 ### 子页面
 

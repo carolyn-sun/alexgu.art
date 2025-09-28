@@ -1,4 +1,4 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -15,13 +15,13 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   gallerySidebar: [
-      'index',
-      'Daily Photos Taken by GFX100S/index',
-      'Photo Trip to America/index',
-      'Fall/index',
-      'Photo Trip to Shengshan Island/index',
-      'Hajime Sorayama/index',
-      'Shanghai Auto Museum/index'     
+    "index",
+    "Daily Photos Taken by GFX100S/index",
+    "Photo Trip to America/index",
+    "Fall/index",
+    "Photo Trip to Shengshan Island/index",
+    "Hajime Sorayama/index",
+    "Shanghai Auto Museum/index",
   ],
 };
 
