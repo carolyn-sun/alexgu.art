@@ -22,7 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-*lq.jpeg
-*lg.jpg
+#*lq.jpeg
+#*lg.jpg
 
 static/lqImages.json
