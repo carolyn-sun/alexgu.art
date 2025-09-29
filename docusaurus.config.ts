@@ -106,6 +106,14 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+  plugins: [
+    [
+      require.resolve("./plugins/cdn-assets"),
+      {
+        cdnBase: process.env.CDN_BASE,
+      },
+    ],
+  ],
 };
 
 export default config;
