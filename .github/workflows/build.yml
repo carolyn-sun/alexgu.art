@@ -63,7 +63,7 @@ jobs:
     steps:
       - name: Delete
         run: |
-          find docs -type f ! -name "*lq*" \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) | while read file; do
+          find build/assets/images -type f ! -name "*_lq-*" \( -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read file; do
             rm "$file"
             echo "DELETED: $file"
           done
