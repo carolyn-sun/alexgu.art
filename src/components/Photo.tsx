@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 interface ExifData {
   [key: string]: any;
+
   src: string;
   json?: ExifData;
 }
@@ -18,11 +19,14 @@ const getLqipSrc = (src: string) => {
   return src.slice(0, extIdx) + "_lq.jpeg";
 };
 
+const R2_PREFIX = "https://r2.alexgu.art";
+
 const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState(lqip || getLqipSrc(src));
   const [hover, setHover] = useState(false);
+  const [triedRemote, setTriedRemote] = useState(false);
 
   const handleClick = () => {
     if (!showOriginal) {
@@ -37,6 +41,13 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
       originalImg.onerror = () => {
         setLoading(false);
       };
+    }
+  };
+
+  const handleError = () => {
+    if (!triedRemote) {
+      setImgSrc(R2_PREFIX + src);
+      setTriedRemote(true);
     }
   };
 
@@ -62,6 +73,7 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
           draggable={false}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
+          onError={handleError}
         />
         {!showOriginal && hover && (
           <div
@@ -112,11 +124,11 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
               }}
             />
             <style>{`
-                            @keyframes spin {
-                                0% { transform: rotate(0deg); }
-                                100% { transform: rotate(360deg); }
-                            }
-                        `}</style>
+                                @keyframes spin {
+                                  0% { transform: rotate(0deg); }
+                                  100% { transform: rotate(360deg); }
+                                }
+                              `}</style>
           </div>
         )}
       </div>

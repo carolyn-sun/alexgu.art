@@ -39,3 +39,31 @@ jobs:
           apiToken: ${{ secrets.Cloudflare_Pages }}
           accountId: 1805cb9294c475500bf37b8428d32fc5
           command: pages deploy build --project-name=alexgu.art
+
+  upload_to_r2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rclone
+        run: sudo apt-get update && sudo apt-get install -y rclone
+
+      - name: Configure Rclone
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.Rclone_Config }}" > ~/.config/rclone/rclone.conf
+
+      - name: Upload to R2
+        run: ./rclone-to-r2.sh
+
+  clean:
+    runs-on: ubuntu-latest
+    needs: [build, upload_to_r2]
+    steps:
+      - name: Delete
+        run: |
+          find docs -type f ! -name "*lq*" \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) | while read file; do
+            rm "$file"
+            echo "DELETED: $file"
+          done
