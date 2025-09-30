@@ -1,36 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ExifData {
   [key: string]: any;
-  src: string;
-  json?: ExifData;
+
+  _pre_url: string;
 }
 
 interface PhotoProps {
-  src: string;
-  lqip?: string;
-  json?: ExifData;
+  jsonFilePath: string;
 }
 
-const getLqipSrc = (src: string) => {
-  const extIdx = src.lastIndexOf(".");
-  if (extIdx === -1) return src + "_lq.jpeg";
-  return src.slice(0, extIdx) + "_lq.jpeg";
+const getLqipSrc = (jsonFilePath: string) => {
+  const extIdx = jsonFilePath.lastIndexOf(".");
+  if (extIdx === -1) return jsonFilePath + "_lq.jpeg";
+  return jsonFilePath.slice(0, extIdx) + "_lq.jpeg";
 };
 
-const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
+const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
+  const [json, setJson] = useState<ExifData | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgSrc, setImgSrc] = useState(lqip || getLqipSrc(src));
+  const [imgSrc, setImgSrc] = useState(getLqipSrc(jsonFilePath));
   const [hover, setHover] = useState(false);
 
+  useEffect(() => {
+    const normalizedPath = jsonFilePath.startsWith("/")
+      ? jsonFilePath.slice(1)
+      : jsonFilePath;
+    import(/* @vite-ignore */ `/${normalizedPath}`)
+      .then((module) => setJson(module.default || module))
+      .catch(() => setJson(null));
+  }, [jsonFilePath]);
+
   const handleClick = () => {
-    if (!showOriginal) {
+    if (!showOriginal && json) {
       setLoading(true);
       const originalImg = new window.Image();
-      originalImg.src = src;
+      originalImg.src = json._pre_url;
       originalImg.onload = () => {
-        setImgSrc(src);
+        setImgSrc(json._pre_url);
         setLoading(false);
         setShowOriginal(true);
       };
@@ -81,7 +89,7 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
               boxShadow: "0 2px 8px #0002",
             }}
           >
-            Click to see high-res photo :-)
+            点击查看高清照片 :-)
           </div>
         )}
         {loading && (
@@ -112,27 +120,28 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
               }}
             />
             <style>{`
-                            @keyframes spin {
-                                0% { transform: rotate(0deg); }
-                                100% { transform: rotate(360deg); }
-                            }
-                        `}</style>
+                @keyframes spin {
+                  0% { transform: rotate(0deg); }
+                  100% { transform: rotate(360deg); }
+                }
+              `}</style>
           </div>
         )}
       </div>
-      {json && (
-        <table
-          style={{
-            marginTop: 12,
-            borderCollapse: "collapse",
-            width: "100%",
-            fontSize: "14px",
-            fontFamily: "Saira",
-            fontWeight: 600,
-          }}
-        >
-          <tbody>
-            {Object.entries(json).map(([key, value]) => (
+      <table
+        style={{
+          marginTop: 12,
+          borderCollapse: "collapse",
+          width: "100%",
+          fontSize: "14px",
+          fontFamily: "Saira",
+          fontWeight: 600,
+        }}
+      >
+        <tbody>
+          {Object.entries(json)
+            .filter(([key]) => key !== "_pre_url")
+            .map(([key, value]) => (
               <tr key={key}>
                 <td
                   style={{
@@ -150,9 +159,8 @@ const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      )}
+        </tbody>
+      </table>
     </div>
   );
 };
