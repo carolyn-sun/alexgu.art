@@ -1,74 +1,74 @@
-name: Build and Deploy
+# name: Build and Deploy
 
-on:
-  push:
-    branches:
-      - main
-      - master
-      - preview
-  workflow_dispatch:
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
+#       - preview
+#   workflow_dispatch:
 
-concurrency:
-  group: "build-and-deploy"
-  cancel-in-progress: true
+# concurrency:
+#   group: "build-and-deploy"
+#   cancel-in-progress: true
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      deployments: write
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: write
+#       deployments: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: "20"
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Build project
-        run: npm run build
+#       - name: Build project
+#         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.Cloudflare_Pages }}
-          accountId: ${{ vars.ACCOUNT_ID }}
-          command: pages deploy build --project-name=${{ vars.PROJECT_NAME }}
+#       - name: Deploy to Cloudflare Pages
+#         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+#         uses: cloudflare/wrangler-action@v3
+#         with:
+#           apiToken: ${{ secrets.Cloudflare_Pages }}
+#           accountId: ${{ vars.ACCOUNT_ID }}
+#           command: pages deploy build --project-name=${{ vars.PROJECT_NAME }}
 
-  upload-to-r2:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#   upload-to-r2:
+#     permissions:
+#       contents: write
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Install Rclone
-        run: sudo apt-get update && sudo apt-get install -y rclone
+#       - name: Install Rclone
+#         run: sudo apt-get update && sudo apt-get install -y rclone
 
-      - name: Configure Rclone
-        run: |
-          mkdir -p ~/.config/rclone
-          echo "${{ secrets.Rclone_Config }}" > ~/.config/rclone/rclone.conf
+#       - name: Configure Rclone
+#         run: |
+#           mkdir -p ~/.config/rclone
+#           echo "${{ secrets.Rclone_Config }}" > ~/.config/rclone/rclone.conf
 
-      - name: Upload to R2
-        run: src/scripts/rclone-to-r2.sh
+#       - name: Upload to R2
+#         run: src/scripts/rclone-to-r2.sh
 
-      - name: Apply changes to repo
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'no-reply@github-actions[bot]'
-          git add .
-          if ! git diff --cached --quiet; then
-            git commit -m "Uploaded to R2"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+#       - name: Apply changes to repo
+#         run: |
+#           git config --global user.name 'github-actions[bot]'
+#           git config --global user.email 'no-reply@github-actions[bot]'
+#           git add .
+#           if ! git diff --cached --quiet; then
+#             git commit -m "Uploaded to R2"
+#             git push
+#           else
+#             echo "No changes to commit."
+#           fi
