@@ -102,7 +102,7 @@ async function processFolders(root) {
 
       // import 主图（如果存在）
       if (rec.image) {
-        importLines.push(`import ${varBase} from "./${rec.image}";`);
+        // importLines.push(`import ${varBase} from "./${rec.image}";`);
       } else {
         // 若没有主图但存在 lq，可把 lq 当作 src（可根据你需求改）
         if (rec.lq) {
@@ -123,7 +123,6 @@ async function processFolders(root) {
       // 构造 <Photo ... /> 行 —— 只加入存在的 props
       const props = [];
       // src 必须存在（rec.image 或 rec.lq 已经作为 src import）
-      props.push(`src={${varBase}}`);
       if (rec.lq) props.push(`lqip={${varBase}LQ}`);
       if (rec.json) props.push(`json={${varBase}JSON}`);
       photoLines.push(`<Photo ${props.join(" ")} />`);

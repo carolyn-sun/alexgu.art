@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface ExifData {
   [key: string]: any;
-  src: string;
-  json?: ExifData;
+  _pre_url: string;
 }
 
 interface PhotoProps {
-  src: string;
   lqip?: string;
-  json?: ExifData;
+  json: ExifData;
 }
 
 const getLqipSrc = (src: string) => {
@@ -18,14 +16,25 @@ const getLqipSrc = (src: string) => {
   return src.slice(0, extIdx) + "_lq.jpeg";
 };
 
-const Photo: React.FC<PhotoProps> = ({ src, lqip, json }) => {
+const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
+  const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgSrc, setImgSrc] = useState(lqip || getLqipSrc(src));
+  const [imgSrc, setImgSrc] = useState<string>(lqip || "");
   const [hover, setHover] = useState(false);
 
+  useEffect(() => {
+    // Dynamically load the _pre_url at runtime
+    if (json && json._pre_url) {
+      setSrc(json._pre_url);
+      if (!lqip) {
+        setImgSrc(getLqipSrc(json._pre_url));
+      }
+    }
+  }, [json, lqip]);
+
   const handleClick = () => {
-    if (!showOriginal) {
+    if (!showOriginal && src) {
       setLoading(true);
       const originalImg = new window.Image();
       originalImg.src = src;

@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - preview
   workflow_dispatch:
 
 concurrency:
@@ -34,13 +35,16 @@ jobs:
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.Cloudflare_Pages }}
-          accountId: ${{ vars.ACCOUNT_ID}}
+          accountId: ${{ vars.ACCOUNT_ID }}
           command: pages deploy build --project-name=${{ vars.PROJECT_NAME }}
 
   upload-to-r2:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -56,3 +60,11 @@ jobs:
 
       - name: Upload to R2
         run: ./rclone-to-r2.sh
+
+      - name: Apple changes to repo
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'no-reply@github-actions[bot]'
+          git add .
+          git commit -m "Uploaded to R2"
+          git push
