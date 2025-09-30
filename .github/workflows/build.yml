@@ -59,9 +59,9 @@ jobs:
           echo "${{ secrets.Rclone_Config }}" > ~/.config/rclone/rclone.conf
 
       - name: Upload to R2
-        run: ./rclone-to-r2.sh
+        run: src/scripts/rclone-to-r2.sh
 
-      - name: Apple changes to repo
+      - name: Apply changes to repo
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'no-reply@github-actions[bot]'
