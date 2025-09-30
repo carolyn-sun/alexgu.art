@@ -1,44 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface ExifData {
   [key: string]: any;
-
   _pre_url: string;
 }
 
 interface PhotoProps {
-  jsonFilePath: string;
+  lqip?: string;
+  json: ExifData;
 }
 
-const getLqipSrc = (jsonFilePath: string) => {
-  const extIdx = jsonFilePath.lastIndexOf(".");
-  if (extIdx === -1) return jsonFilePath + "_lq.jpeg";
-  return jsonFilePath.slice(0, extIdx) + "_lq.jpeg";
+const getLqipSrc = (src: string) => {
+  const extIdx = src.lastIndexOf(".");
+  if (extIdx === -1) return src + "_lq.jpeg";
+  return src.slice(0, extIdx) + "_lq.jpeg";
 };
 
-const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
-  const [json, setJson] = useState<ExifData | null>(null);
+const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
+  const src = json._pre_url;
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgSrc, setImgSrc] = useState(getLqipSrc(jsonFilePath));
+  const [imgSrc, setImgSrc] = useState(lqip || getLqipSrc(src));
   const [hover, setHover] = useState(false);
 
-  useEffect(() => {
-    const normalizedPath = jsonFilePath.startsWith("/")
-      ? jsonFilePath.slice(1)
-      : jsonFilePath;
-    import(/* @vite-ignore */ `/${normalizedPath}`)
-      .then((module) => setJson(module.default || module))
-      .catch(() => setJson(null));
-  }, [jsonFilePath]);
-
   const handleClick = () => {
-    if (!showOriginal && json) {
+    if (!showOriginal) {
       setLoading(true);
       const originalImg = new window.Image();
-      originalImg.src = json._pre_url;
+      originalImg.src = src;
       originalImg.onload = () => {
-        setImgSrc(json._pre_url);
+        setImgSrc(src);
         setLoading(false);
         setShowOriginal(true);
       };
@@ -76,7 +67,7 @@ const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
             style={{
               position: "absolute",
               top: "50%",
-              left: "50%",
+              left: "50%,",
               transform: "translate(-50%, -120%)",
               background: "rgba(40,40,40,0.92)",
               color: "#fff",
@@ -89,7 +80,7 @@ const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
               boxShadow: "0 2px 8px #0002",
             }}
           >
-            点击查看高清照片 :-)
+            Click to see high-res photo :-)
           </div>
         )}
         {loading && (
@@ -120,28 +111,27 @@ const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
               }}
             />
             <style>{`
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-              `}</style>
+                            @keyframes spin {
+                                0% { transform: rotate(0deg); }
+                                100% { transform: rotate(360deg); }
+                            }
+                        `}</style>
           </div>
         )}
       </div>
-      <table
-        style={{
-          marginTop: 12,
-          borderCollapse: "collapse",
-          width: "100%",
-          fontSize: "14px",
-          fontFamily: "Saira",
-          fontWeight: 600,
-        }}
-      >
-        <tbody>
-          {Object.entries(json)
-            .filter(([key]) => key !== "_pre_url")
-            .map(([key, value]) => (
+      {json && (
+        <table
+          style={{
+            marginTop: 12,
+            borderCollapse: "collapse",
+            width: "100%",
+            fontSize: "14px",
+            fontFamily: "Saira",
+            fontWeight: 600,
+          }}
+        >
+          <tbody>
+            {Object.entries(json).map(([key, value]) => (
               <tr key={key}>
                 <td
                   style={{
@@ -159,8 +149,9 @@ const Photo: React.FC<PhotoProps> = ({ jsonFilePath }) => {
                 </td>
               </tr>
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

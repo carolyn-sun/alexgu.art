@@ -7,50 +7,127 @@ date: 2025-09-24
 
 import Photo from "../../src/components/Photo.tsx";
 
+// Import all JSON and LQ image files
+// 4x5 Large Format - Color Reversal Film
+import IMGG0711RDP453 from "./IMGG0711RDP453.json";
+import IMGG0711RDP453LQ from "./IMGG0711RDP453lq.jpeg";
+import IMGG0711RDP451 from "./IMGG0711RDP451.json";
+import IMGG0711RDP451LQ from "./IMGG0711RDP451lq.jpeg";
+import IMGG0711RDP454 from "./IMGG0711RDP454.json";
+import IMGG0711RDP454LQ from "./IMGG0711RDP454lq.jpeg";
+
+// 4x5 Large Format - Color Negative Film
+import DSF6951 from "./DSF6951.json";
+import DSF6951LQ from "./DSF6951lq.jpeg";
+import DSF6950 from "./DSF6950.json";
+import DSF6950LQ from "./DSF6950lq.jpeg";
+import DSF6953 from "./DSF6953.json";
+import DSF6953LQ from "./DSF6953lq.jpeg";
+import DSF6955 from "./DSF6955.json";
+import DSF6955LQ from "./DSF6955lq.jpeg";
+import DSF6956 from "./DSF6956.json";
+import DSF6956LQ from "./DSF6956lq.jpeg";
+
+// 135 Format
+import IMG019 from "./IMG019.json";
+import IMG019LQ from "./IMG019lq.jpeg";
+import IMG020 from "./IMG020.json";
+import IMG020LQ from "./IMG020lq.jpeg";
+import IMG027 from "./IMG027.json";
+import IMG027LQ from "./IMG027lq.jpeg";
+import IMG049 from "./IMG049.json";
+import IMG049LQ from "./IMG049lq.jpeg";
+import IMG054 from "./IMG054.json";
+import IMG054LQ from "./IMG054lq.jpeg";
+import IMG056 from "./IMG056.json";
+import IMG056LQ from "./IMG056lq.jpeg";
+import IMG057 from "./IMG057.json";
+import IMG057LQ from "./IMG057lq.jpeg";
+import IMG060 from "./IMG060.json";
+import IMG060LQ from "./IMG060lq.jpeg";
+import IMG061 from "./IMG061.json";
+import IMG061LQ from "./IMG061lq.jpeg";
+import IMG068 from "./IMG068.json";
+import IMG068LQ from "./IMG068lq.jpeg";
+import IMG076 from "./IMG076.json";
+import IMG076LQ from "./IMG076lq.jpeg";
+import IMG078 from "./IMG078.json";
+import IMG078LQ from "./IMG078lq.jpeg";
+import IMG081 from "./IMG081.json";
+import IMG081LQ from "./IMG081lq.jpeg";
+import IMG084 from "./IMG084.json";
+import IMG084LQ from "./IMG084lq.jpeg";
+import IMG087 from "./IMG087.json";
+import IMG087LQ from "./IMG087lq.jpeg";
+import IMG093 from "./IMG093.json";
+import IMG093LQ from "./IMG093lq.jpeg";
+import IMG099 from "./IMG099.json";
+import IMG099LQ from "./IMG099lq.jpeg";
+import IMG103 from "./IMG103.json";
+import IMG103LQ from "./IMG103lq.jpeg";
+import IMG105 from "./IMG105.json";
+import IMG105LQ from "./IMG105lq.jpeg";
+import IMG112 from "./IMG112.json";
+import IMG112LQ from "./IMG112lq.jpeg";
+import IMG114 from "./IMG114.json";
+import IMG114LQ from "./IMG114lq.jpeg";
+import IMG118 from "./IMG118.json";
+import IMG118LQ from "./IMG118lq.jpeg";
+import IMG119 from "./IMG119.json";
+import IMG119LQ from "./IMG119lq.jpeg";
+import IMG120 from "./IMG120.json";
+import IMG120LQ from "./IMG120lq.jpeg";
+import IMG123 from "./IMG123.json";
+import IMG123LQ from "./IMG123lq.jpeg";
+import IMG124 from "./IMG124.json";
+import IMG124LQ from "./IMG124lq.jpeg";
+import IMG129 from "./IMG129.json";
+import IMG129LQ from "./IMG129lq.jpeg";
+
 ## 4x5 Large Format
 
 ### Color Reversal Film
 
-<Photo jsonFilePath="./IMGG0711RDP453.json" />
-<Photo jsonFilePath="./IMGG0711RDP451.json" />
-<Photo jsonFilePath="./IMGG0711RDP454.json" />
+<Photo json={IMGG0711RDP453} lqip={IMGG0711RDP453LQ} />
+<Photo json={IMGG0711RDP451} lqip={IMGG0711RDP451LQ} />
+<Photo json={IMGG0711RDP454} lqip={IMGG0711RDP454LQ} />
 
 ### Color Negative Film
 
-<Photo jsonFilePath="./_DSF6951.json" />
-<Photo jsonFilePath="./_DSF6950.json" />
-<Photo jsonFilePath="./_DSF6953.json" />
-<Photo jsonFilePath="./_DSF6955.json" />
-<Photo jsonFilePath="./_DSF6956.json" />
+<Photo json={DSF6951} lqip={DSF6951LQ} />
+<Photo json={DSF6950} lqip={DSF6950LQ} />
+<Photo json={DSF6953} lqip={DSF6953LQ} />
+<Photo json={DSF6955} lqip={DSF6955LQ} />
+<Photo json={DSF6956} lqip={DSF6956LQ} />
 
 ## 135 Format
 
 All photos are taken with Konica GENBAKANTOKU ZOOM together with Kodak ColorPlus 200!
 
-<Photo jsonFilePath="./IMG019.json" />
-<Photo jsonFilePath="./IMG020.json" />
-<Photo jsonFilePath="./IMG027.json" />
-<Photo jsonFilePath="./IMG049.json" />
-<Photo jsonFilePath="./IMG054.json" />
-<Photo jsonFilePath="./IMG056.json" />
-<Photo jsonFilePath="./IMG057.json" />
-<Photo jsonFilePath="./IMG060.json" />
-<Photo jsonFilePath="./IMG061.json" />
-<Photo jsonFilePath="./IMG068.json" />
-<Photo jsonFilePath="./IMG076.json" />
-<Photo jsonFilePath="./IMG078.json" />
-<Photo jsonFilePath="./IMG081.json" />
-<Photo jsonFilePath="./IMG084.json" />
-<Photo jsonFilePath="./IMG087.json" />
-<Photo jsonFilePath="./IMG093.json" />
-<Photo jsonFilePath="./IMG099.json" />
-<Photo jsonFilePath="./IMG103.json" />
-<Photo jsonFilePath="./IMG105.json" />
-<Photo jsonFilePath="./IMG112.json" />
-<Photo jsonFilePath="./IMG114.json" />
-<Photo jsonFilePath="./IMG118.json" />
-<Photo jsonFilePath="./IMG119.json" />
-<Photo jsonFilePath="./IMG120.json" />
-<Photo jsonFilePath="./IMG123.json" />
-<Photo jsonFilePath="./IMG124.json" />
-<Photo jsonFilePath="./IMG129.json" />
+<Photo json={IMG019} lqip={IMG019LQ} />
+<Photo json={IMG020} lqip={IMG020LQ} />
+<Photo json={IMG027} lqip={IMG027LQ} />
+<Photo json={IMG049} lqip={IMG049LQ} />
+<Photo json={IMG054} lqip={IMG054LQ} />
+<Photo json={IMG056} lqip={IMG056LQ} />
+<Photo json={IMG057} lqip={IMG057LQ} />
+<Photo json={IMG060} lqip={IMG060LQ} />
+<Photo json={IMG061} lqip={IMG061LQ} />
+<Photo json={IMG068} lqip={IMG068LQ} />
+<Photo json={IMG076} lqip={IMG076LQ} />
+<Photo json={IMG078} lqip={IMG078LQ} />
+<Photo json={IMG081} lqip={IMG081LQ} />
+<Photo json={IMG084} lqip={IMG084LQ} />
+<Photo json={IMG087} lqip={IMG087LQ} />
+<Photo json={IMG093} lqip={IMG093LQ} />
+<Photo json={IMG099} lqip={IMG099LQ} />
+<Photo json={IMG103} lqip={IMG103LQ} />
+<Photo json={IMG105} lqip={IMG105LQ} />
+<Photo json={IMG112} lqip={IMG112LQ} />
+<Photo json={IMG114} lqip={IMG114LQ} />
+<Photo json={IMG118} lqip={IMG118LQ} />
+<Photo json={IMG119} lqip={IMG119LQ} />
+<Photo json={IMG120} lqip={IMG120LQ} />
+<Photo json={IMG123} lqip={IMG123LQ} />
+<Photo json={IMG124} lqip={IMG124LQ} />
+<Photo json={IMG129} lqip={IMG129LQ} />
