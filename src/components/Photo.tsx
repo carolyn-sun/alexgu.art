@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface ExifData {
   [key: string]: any;
@@ -17,14 +17,24 @@ const getLqipSrc = (src: string) => {
 };
 
 const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
-  const src = json._pre_url;
+  const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgSrc, setImgSrc] = useState(lqip || getLqipSrc(src));
+  const [imgSrc, setImgSrc] = useState<string>(lqip || "");
   const [hover, setHover] = useState(false);
 
+  useEffect(() => {
+    // Dynamically load the _pre_url at runtime
+    if (json && json._pre_url) {
+      setSrc(json._pre_url);
+      if (!lqip) {
+        setImgSrc(getLqipSrc(json._pre_url));
+      }
+    }
+  }, [json, lqip]);
+
   const handleClick = () => {
-    if (!showOriginal) {
+    if (!showOriginal && src) {
       setLoading(true);
       const originalImg = new window.Image();
       originalImg.src = src;
@@ -67,7 +77,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
             style={{
               position: "absolute",
               top: "50%",
-              left: "50%,",
+              left: "50%",
               transform: "translate(-50%, -120%)",
               background: "rgba(40,40,40,0.92)",
               color: "#fff",
