@@ -141,24 +141,29 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
           }}
         >
           <tbody>
-            {Object.entries(json).map(([key, value]) => (
-              <tr key={key}>
-                <td
-                  style={{
-                    padding: "4px 8px",
-                    borderBottom: "1px solid #eee",
-                    width: 160,
-                  }}
-                >
-                  {key}
-                </td>
-                <td
-                  style={{ padding: "4px 8px", borderBottom: "1px solid #eee" }}
-                >
-                  {String(value)}
-                </td>
-              </tr>
-            ))}
+            {Object.entries(json)
+              .filter(([key]) => !key.startsWith("_")) // Filter out keys starting with '_'
+              .map(([key, value]) => (
+                <tr key={key}>
+                  <td
+                    style={{
+                      padding: "4px 8px",
+                      borderBottom: "1px solid #eee",
+                      width: 160,
+                    }}
+                  >
+                    {key}
+                  </td>
+                  <td
+                    style={{
+                      padding: "4px 8px",
+                      borderBottom: "1px solid #eee",
+                    }}
+                  >
+                    {String(value)}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       )}
