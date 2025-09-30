@@ -15,14 +15,14 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   gallerySidebar: [
-      'index',
-      'Daily Photos Taken by GFX100S/index',
-      'Daily Photos Taken by Film/index',
-      'Photo Trip to America/index',
-      'Fall/index',
-      'Photo Trip to Shengshan Island/index',
-      'Hajime Sorayama/index',
-      'Shanghai Auto Museum/index'     
+    "index",
+    "daily-photos-taken-by-gfx100s/index",
+    "daily-photos-taken-by-film/index",
+    "photo-trip-to-america/index",
+    "fall/index",
+    "photo-trip-to-shengshan-island/index",
+    "hajime-sorayama/index",
+    "shanghai-auto-museum/index",
   ],
 };
 

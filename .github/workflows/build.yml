@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - preview
   workflow_dispatch:
 
 concurrency:
@@ -12,35 +13,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      deployments: write
+  # build:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #     deployments: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20"
 
-      - name: Install dependencies
-        run: npm install
+  #     - name: Install dependencies
+  #       run: npm install
 
-      - name: Build project
-        run: npm run build
+  #     - name: Build project
+  #       run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.Cloudflare_Pages }}
-          accountId: ${{ vars.ACCOUNT_ID}}
-          command: pages deploy build --project-name=${{ vars.PROJECT_NAME }}
+  # - name: Deploy to Cloudflare Pages
+  #   uses: cloudflare/wrangler-action@v3
+  #   with:
+  #     apiToken: ${{ secrets.Cloudflare_Pages }}
+  #     accountId: ${{ vars.ACCOUNT_ID}}
+  #     command: pages deploy build --project-name=${{ vars.PROJECT_NAME }}
 
   upload-to-r2:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -56,3 +59,11 @@ jobs:
 
       - name: Upload to R2
         run: ./rclone-to-r2.sh
+
+      - name: Apple changes to repo
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'no-reply@github-actions[bot]'
+          git add .
+          git commit -m "Uploaded to R2"
+          git push
