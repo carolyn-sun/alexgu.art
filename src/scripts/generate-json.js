@@ -75,10 +75,10 @@ async function processDir(dir) {
             "/",
           );
           json._pre_url = `${CDN_PREFIX}/${relPath}`;
+          await writeFile(jsonPath, JSON.stringify(json, null, 2), "utf-8");
+          await gitAdd(jsonPath);
+          console.log(`UPDATED: ${jsonPath}`);
         }
-        await writeFile(jsonPath, JSON.stringify(json, null, 2), "utf-8");
-        await gitAdd(jsonPath);
-        console.log(`UPDATED: ${jsonPath}`);
       } catch (err) {
         console.error(`ERROR WHEN UPDATING ${jsonPath}:`, err);
       }

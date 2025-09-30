@@ -1,11 +1,11 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches:
-      - main
-      - master
-      - preview
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #     - preview
   workflow_dispatch:
 
 concurrency:
