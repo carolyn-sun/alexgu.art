@@ -22,7 +22,7 @@
 6. 上一步会遍历所有照片，并且在相同目录下**自动**生成同名的保存有 EXIF 信息的`json`文件。如果已经存在同名`json`文件，则会跳过该照片。因此，如果需要重新生成`json`文件，需要删除同名的`json`文件。
 7. 同时，对于每个项目目录，都会**自动**生成一个`index.md`文件，作为该项目的页面文件。如果已经存在该文件，则会跳过该项目。因此，如果对于某一项目添加或者删除了照片后，需要重新生成`index.md`文件，需要删除该文件。在该文件中，可以添加一些描述性的文字，使用`Markdown`语法，以及[`Docusaurus`的`MDX`语法](https://docusaurus.io/docs/markdown-features/react)。
 8. 此后，脚本会透过 RClone 或 Wrangler 将照片上传至 Cloudflare R2。
-9. 在`sidebars.ts`中，添加该项目的侧边栏链接或[子页面](#子页面)。在 `src/components/GalleryIndex.tsx` 中，添加索引链接。
+9. 在`sidebars.ts`中，添加该项目的侧边栏链接或[子页面](#子页面)。在 `src/pages/index.mdx` 中，添加索引链接。
 10. 提交所有更改后，等待自动部署后，即可在`https://alexgu.art`下查看效果。在[这里](https://github.com/carolyn-sun/alexgu.art/commits/main/)查看构建日志。在这里查看[部署状态和站点日志](https://dash.cloudflare.com/1805cb9294c475500bf37b8428d32fc5/pages/view/alexgu-art/)。
 
 ## 其他
