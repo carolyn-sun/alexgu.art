@@ -27,3 +27,4 @@ yarn-error.log*
 #*lg.jpg
 
 static/lqImages.json
+src/scripts/prepare.js

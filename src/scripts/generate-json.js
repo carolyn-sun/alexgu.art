@@ -99,8 +99,12 @@ async function processDir(dir) {
       if (!filtered.Copyright) {
         filtered.Copyright = "Alexander Gu";
       }
+      const relPath = join(dir.replace(/^docs\/?/, ""), file).replace(
+        /\\/g,
+        "/",
+      );
 
-      filtered._pre_url = `./${file}`;
+      filtered._pre_url = `${CDN_PREFIX}/${relPath}`;
 
       await writeFile(jsonPath, JSON.stringify(filtered, null, 2), "utf-8");
       await gitAdd(jsonPath);
