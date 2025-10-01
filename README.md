@@ -6,7 +6,7 @@
 
 @gjc1202 is the site owner.
 
-This is the source code repository for [https://alexgu.art](https://alexgu.art). Built with Docusaurus 3 and optimized for showcasing photography works. Deployed on Cloudflare Pages, with photos stored in Cloudflare R2.
+This is the source code repository for [https://alexgu.art](https://alexgu.art). Built with [Docusaurus](https://github.com/facebook/docusaurus) 3 and optimized for showcasing photography works. Deployed on Cloudflare Pages, with photos stored in Cloudflare R2.
 
 ### Prerequisites
 
@@ -29,7 +29,7 @@ This is the source code repository for [https://alexgu.art](https://alexgu.art).
 
 @gjc1202 是站点所有者。
 
-这是 [https://alexgu.art](https://alexgu.art) 的源代码仓库。基于 Docusaurus 3 构建，针对展现摄影作品进行了优化。部署于 Cloudflare Pages，照片存储于 Cloudflare R2。
+这是 [https://alexgu.art](https://alexgu.art) 的源代码仓库。基于 [Docusaurus](https://github.com/facebook/docusaurus) 3 构建，针对展现摄影作品进行了优化。部署于 Cloudflare Pages，照片存储于 Cloudflare R2。
 
 ### 前置条件
 
