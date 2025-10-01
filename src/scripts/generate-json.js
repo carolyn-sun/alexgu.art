@@ -61,15 +61,12 @@ async function processDir(dir) {
     const imageExists = await fileExists(filePath);
 
     if (await fileExists(jsonPath)) {
-      // JSON 已存在，检查同名图片
       try {
         const json = JSON.parse(await readFile(jsonPath, "utf-8"));
         if (imageExists) {
-          // 更新 _pre_url 为相对于 repo 的路径
           const relPath = join(dir, file).replace(/\\/g, "/");
           json._pre_url = `${relPath}`;
         } else {
-          // CDN 路径需要相对 docs 的路径
           const relPath = join(dir.replace(/^docs\/?/, ""), file).replace(
             /\\/g,
             "/",
@@ -99,10 +96,7 @@ async function processDir(dir) {
       if (!filtered.Copyright) {
         filtered.Copyright = "Alexander Gu";
       }
-      const relPath = join(dir, file).replace(
-        /\\/g,
-        "/",
-      );
+      const relPath = join(dir, file).replace(/\\/g, "/");
 
       filtered._pre_url = `${CDN_PREFIX}/${relPath}`;
 
