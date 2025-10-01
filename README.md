@@ -47,3 +47,4 @@ This is the source code repository for [https://alexgu.art](https://alexgu.art).
 7. 同时，对于每个项目目录，都会**自动**生成一个`index.md`文件，作为该项目的页面文件。如果已经存在该文件，则会跳过该项目。因此，如果对于某一项目添加或者删除了照片后，需要重新生成`index.md`文件，需要删除该文件。在该文件中，可以添加一些描述性的文字，使用`Markdown`语法，以及[`Docusaurus`的`MDX`语法](https://docusaurus.io/docs/markdown-features/react)。
 8. 此后，脚本会透过 RClone 或 Wrangler 将照片上传至 Cloudflare R2。
 9. 在`sidebars.ts`中，添加该项目的侧边栏链接或。在 `src/pages/index.mdx` 中，添加索引链接。
+
