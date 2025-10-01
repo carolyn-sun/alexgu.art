@@ -99,7 +99,7 @@ async function processDir(dir) {
       if (!filtered.Copyright) {
         filtered.Copyright = "Alexander Gu";
       }
-      const relPath = join(dir.replace(/^docs\/?/, ""), file).replace(
+      const relPath = join(dir, file).replace(
         /\\/g,
         "/",
       );
