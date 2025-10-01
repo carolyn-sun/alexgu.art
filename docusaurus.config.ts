@@ -88,6 +88,11 @@ const config: Config = {
           position: "left",
           label: "Gallery",
         },
+        {
+          to: "/me",
+          label: "About Me",
+          position: "right",
+        },
       ],
     },
     footer: {

@@ -15,7 +15,6 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 const sidebars: SidebarsConfig = {
   // By default, Docusaurus generates a sidebar from the docs folder structure
   gallerySidebar: [
-    "index",
     "daily-photos-taken-by-gfx100s/index",
     "daily-photos-taken-by-film/index",
     "photo-trip-to-america/index",

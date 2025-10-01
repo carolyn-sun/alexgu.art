@@ -49,20 +49,33 @@ const Flow: React.FC = () => {
           }}
         >
           {col.map((img, i) => (
-            <img
+            <div
               key={i}
-              src={img}
-              alt=""
               style={{
+                position: "relative",
                 width: "100%",
-                height: 140,
+                height: 160,
+                overflow: "hidden", // 裁剪超出部分
                 borderRadius: 12,
-                objectFit: "cover",
-                display: "block",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
               }}
-              loading="lazy"
-            />
+            >
+              <img
+                src={img}
+                alt=""
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: "150%",
+                  height: "150%",
+                  transform: "translate(-50%, -50%)",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+                loading="lazy"
+              />
+            </div>
           ))}
         </div>
       ))}
