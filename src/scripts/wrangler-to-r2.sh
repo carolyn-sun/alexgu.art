@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f ./.env ]; then
+  source ./.env
+fi
+
 BUCKET_NAME="alexgu-art"
 PREFIX="https://r2.alexgu.art"
 

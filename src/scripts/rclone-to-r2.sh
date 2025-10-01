@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f ./.env ]; then
+  source ./.env
+fi
+
 REMOTE="r2:alexgu-art"
 PREFIX="https://r2.alexgu.art"
 
