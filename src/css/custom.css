@@ -32,6 +32,7 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  font-weight: calc(var(--ifm-font-weight-normal) + 15);
 }
 
 :root {
@@ -46,6 +47,7 @@
   --ifm-font-family-monospace:
     "Saira Variable", SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  --ifm-font-weight-normal: 400;
 }
 
 .navbar {
