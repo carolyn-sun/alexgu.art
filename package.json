@@ -18,8 +18,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.9.1",
-    "@docusaurus/preset-classic": "^3.9.1",
+    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/eslint-plugin": "^3.9.2",
+    "@docusaurus/preset-classic": "^3.9.2",
+    "@eslint/config-array": "^0.21.1",
+    "@eslint/object-schema": "^2.1.7",
     "@fontsource-variable/montserrat": "^5.2.8",
     "@fontsource-variable/noto-sans": "^5.2.10",
     "@fontsource-variable/saira": "^5.2.10",
