@@ -89,6 +89,11 @@ const config: Config = {
           label: "Gallery",
         },
         {
+          to: "https://www.travellings.cn/go.html",
+          label: "🚇 开往",
+          position: "left",
+        },
+        {
           to: "/me",
           label: "About Me",
           position: "right",
@@ -103,7 +108,9 @@ const config: Config = {
         <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
         <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
         <img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
-        <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;">
+        <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;vertical-align:middle;"><br/>
+        <a href="https://www.travellings.cn/go.html" target="_blank" rel="noopener" title="开往-友链接力">
+        <img src="https://www.travellings.cn/assets/logo.svg" alt="开往-友链接力" width="75"></a>
       `,
     },
     prism: {
