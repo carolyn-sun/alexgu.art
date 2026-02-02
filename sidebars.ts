@@ -22,6 +22,7 @@ const sidebars: SidebarsConfig = {
     "photo-trip-to-shengshan-island/index",
     "hajime-sorayama/index",
     "shanghai-auto-museum/index",
+    "photo-ride-to-dhm/index",
   ],
 };
 
