@@ -6,6 +6,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build && node src/scripts/generate-lq-json.js",
+    "process": "./fix-name.sh && node src/scripts/generate-json.js && node src/scripts/generate-lqip.js",
+    "sync": "src/scripts/wrangler-to-r2.sh",
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "tsc",
