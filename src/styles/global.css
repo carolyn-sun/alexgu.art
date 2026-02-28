@@ -28,36 +28,42 @@ body {
   max-width: none;
 }
 
+.prose p,
+.prose li {
+  max-width: 65ch; /* Optimal line length for readability */
+}
+
 .prose h2,
 .prose h3,
 .prose h4 {
   font-family: "Saira Variable", sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   font-weight: 700;
-  margin-top: 4rem !important;
-  margin-bottom: 2rem !important;
+  margin-top: 6rem !important;
+  margin-bottom: 2.5rem !important;
 }
 
 .prose h2 {
-  font-size: 1.875rem; /* 30px */
-  border-left: 4px solid var(--color-zinc-900);
-  padding-left: 1.5rem;
+  font-size: 2.25rem;
+  border-left: 6px solid var(--color-zinc-900);
+  padding-left: 2rem;
 }
 
 .prose h3 {
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.5rem;
   opacity: 0.9;
 }
 
 .prose h4 {
-  font-size: 1rem; /* 16px */
+  font-size: 1.125rem;
   opacity: 0.7;
 }
 
 .prose p {
-  line-height: 1.8;
-  font-size: 1.05rem;
+  line-height: 2;
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem !important;
 }
 
 /* Fix Inline Code Block Visibility */
