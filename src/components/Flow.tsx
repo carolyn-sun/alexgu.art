@@ -62,7 +62,7 @@ const Flow: React.FC = () => {
       {columns.map((col, idx) => (
         <div
           key={idx}
-          className={`flex flex-col gap-3 md:gap-6 ${idx % 2 === 1 ? "mt-8 md:mt-12" : ""}`}
+          className={`flex-1 flex flex-col gap-3 md:gap-8 ${idx % 2 === 1 ? "mt-8 md:mt-12" : ""} ${idx >= 2 ? "hidden md:flex" : ""}`}
         >
           {col.map((img, i) => (
             <motion.div
