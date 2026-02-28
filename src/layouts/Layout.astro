@@ -9,6 +9,10 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+// Preload critical fonts to prevent FOUT
+import montserratUrl from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url";
+import sairaUrl from "@fontsource-variable/saira/files/saira-latin-wght-normal.woff2?url";
 ---
 
 <!doctype html>
@@ -18,8 +22,40 @@ const { title } = Astro.props;
     <meta name="description" content="Alexander Gu's Photography Portfolio" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+
+    <!-- Font Preloads -->
+    <link
+      rel="preload"
+      href={montserratUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={sairaUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <style is:inline>
+      /* Critical Typography to prevent FOUT */
+      h1,
+      h2,
+      h3,
+      h4,
+      .font-saira {
+        font-family: "Saira Variable", sans-serif;
+      }
+      .font-montserrat,
+      .site-title {
+        font-family: "Montserrat Variable", sans-serif;
+      }
+    </style>
   </head>
   <body
     class="bg-zinc-50 dark:bg-[#070708] text-zinc-900 dark:text-zinc-50 min-h-screen font-sans antialiased selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black"
