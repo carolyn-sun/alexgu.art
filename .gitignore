@@ -28,3 +28,6 @@ yarn-error.log*
 
 static/lqImages.json
 src/scripts/prepare.js
+
+.wrangler
+dist

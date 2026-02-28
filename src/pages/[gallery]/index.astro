@@ -1,0 +1,70 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const fs = await import("node:fs/promises");
+  const docsDir = "docs";
+  const entries = await fs.readdir(docsDir, { withFileTypes: true });
+  const galleries = entries
+    .filter((e) => e.isDirectory() && !e.name.startsWith("."))
+    .map((e) => e.name);
+
+  return galleries.map((gallery) => ({
+    params: { gallery },
+  }));
+}
+
+const { gallery } = Astro.params;
+
+const allDocs = import.meta.glob("../../../docs/**/index.{md,mdx}", {
+  eager: true,
+});
+const docKey = Object.keys(allDocs).find((k) =>
+  k.includes(`/docs/${gallery}/index.`),
+);
+const doc = docKey ? (allDocs[docKey] as any) : null;
+const Content = doc ? doc.Content : null;
+const frontmatter = doc ? doc.frontmatter : {};
+const title =
+  frontmatter.title ||
+  gallery
+    .split("-")
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+---
+
+<Layout title={`${title} | Alexander Gu`}>
+  <div class="mb-24">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-900 border-b border-transparent hover:border-zinc-900 pb-1 uppercase tracking-[0.2em] text-[10px] font-black transition-all dark:hover:text-zinc-100 dark:hover:border-zinc-100 no-underline"
+      >&larr; Back to selection</a
+    >
+    <div class="max-w-4xl">
+      <h1
+        class="text-6xl md:text-8xl font-black mt-12 mb-6 uppercase tracking-tight leading-[0.85] text-zinc-900 dark:text-zinc-50"
+        style="font-family: 'Saira Variable', sans-serif"
+      >
+        {title}
+      </h1>
+      {
+        frontmatter.date && (
+          <p class="text-zinc-400 font-bold tracking-[0.3em] uppercase text-[10px]">
+            {new Date(frontmatter.date).toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    Content && (
+      <div class="prose prose-zinc dark:prose-invert max-w-none text-zinc-900 dark:text-zinc-50 mt-32">
+        <Content components={{ h1: () => null }} />
+      </div>
+    )
+  }
+</Layout>

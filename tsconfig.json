@@ -1,10 +1,10 @@
 {
   // This file is not used in compilation. It is here just for a nice editor experience.
-  "extends": "@docusaurus/tsconfig",
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "baseUrl": ".",
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "exclude": [".docusaurus", "build"]
+  "exclude": [".docusaurus", "build", "dist", "node_modules"]
 }

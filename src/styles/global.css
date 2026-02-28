@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Montserrat Variable", "Saira Variable", "Noto Sans Variable", system-ui,
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #fafbfc;
+  color: #111213;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0d0d0e;
+    color: #e2e4e7;
+  }
+}
+
+/* Premium Prose Refinements */
+.prose {
+  --tw-prose-headings: var(--color-zinc-900);
+  --tw-prose-body: var(--color-zinc-700);
+  --tw-prose-links: var(--color-zinc-900);
+}
+
+.dark .prose {
+  --tw-prose-headings: var(--color-zinc-100);
+  --tw-prose-body: var(--color-zinc-400);
+  --tw-prose-links: var(--color-zinc-100);
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: "Saira Variable", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-top: 4rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.prose h2 {
+  font-size: 1.875rem; /* 30px */
+  border-left: 4px solid var(--color-zinc-900);
+  padding-left: 1.5rem;
+}
+
+.dark .prose h2 {
+  border-left-color: var(--color-zinc-100);
+}
+
+.prose h3 {
+  font-size: 1.25rem; /* 20px */
+  opacity: 0.9;
+}
+
+.prose h4 {
+  font-size: 1rem; /* 16px */
+  opacity: 0.7;
+}
+
+.prose p {
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.prose p code {
+  background: var(--color-zinc-100);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.dark .prose p code {
+  background: var(--color-zinc-800);
+}
+
+.prose img {
+  border-radius: 12px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.dark .prose img {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+}

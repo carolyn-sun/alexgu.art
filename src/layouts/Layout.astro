@@ -1,0 +1,130 @@
+---
+import "@fontsource-variable/montserrat";
+import "@fontsource-variable/saira";
+import "@fontsource-variable/noto-sans";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Alexander Gu's Photography Portfolio" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body
+    class="bg-zinc-50 dark:bg-[#070708] text-zinc-900 dark:text-zinc-50 min-h-screen font-sans antialiased selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black"
+  >
+    <!-- Premium Noise Texture -->
+    <div
+      class="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] dark:opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
+    >
+    </div>
+
+    <header
+      class="py-24 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8"
+    >
+      <div>
+        <h1
+          class="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none"
+          style="font-family: 'Montserrat Variable', sans-serif;"
+        >
+          <a href="/" class="hover:opacity-60 transition-all duration-500"
+            >Alexander Gu</a
+          >
+        </h1>
+        <p
+          class="mt-4 text-zinc-400 dark:text-zinc-600 font-black tracking-[0.4em] text-[10px] uppercase"
+        >
+          Photography Portfolio & Archive
+        </p>
+      </div>
+
+      <nav
+        class="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600"
+      >
+        <a
+          href="/"
+          class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          >Galleries</a
+        >
+        <a
+          href="/me"
+          class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          >Identity</a
+        >
+        <a
+          href="mailto:gjc78263@gmail.com"
+          class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          >Message</a
+        >
+      </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pb-48">
+      <slot />
+    </main>
+
+    <footer
+      class="py-24 border-t border-zinc-200 dark:border-zinc-900/50 bg-zinc-100/30 dark:bg-zinc-900/10 backdrop-blur-sm text-center text-[10px] font-bold tracking-widest text-zinc-400 flex flex-col items-center gap-10"
+    >
+      <div
+        class="flex gap-12 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+      >
+        <img
+          src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
+          alt="CC"
+          class="w-5 dark:invert"
+        />
+        <img
+          src="https://mirrors.creativecommons.org/presskit/icons/by.svg"
+          alt="BY"
+          class="w-5 dark:invert"
+        />
+        <img
+          src="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
+          alt="NC"
+          class="w-5 dark:invert"
+        />
+        <img
+          src="https://mirrors.creativecommons.org/presskit/icons/sa.svg"
+          alt="SA"
+          class="w-5 dark:invert"
+        />
+      </div>
+
+      <p class="leading-loose uppercase tracking-[0.3em] max-w-sm">
+        Content licensed under <a
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+          class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-200 dark:decoration-zinc-800 underline-offset-4"
+          >CC BY-NC-SA 4.0</a
+        >
+        <br />
+        &copy; {new Date().getFullYear()} Alexander Gu
+      </p>
+
+      <a
+        href="https://www.travellings.cn/go.html"
+        target="_blank"
+        rel="noopener"
+        class="opacity-30 hover:opacity-100 transition-opacity duration-500"
+      >
+        <img
+          src="https://www.travellings.cn/assets/logo.svg"
+          alt="TRAVELLINGS"
+          width="80"
+          class="dark:invert"
+        />
+      </a>
+    </footer>
+  </body>
+</html>
