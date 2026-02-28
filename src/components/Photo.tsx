@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ExifData {
   [key: string]: any;
@@ -6,7 +7,7 @@ interface ExifData {
 }
 
 interface PhotoProps {
-  lqip?: string;
+  lqip?: string | { src: string };
   json: ExifData;
 }
 
@@ -20,11 +21,14 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
   const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgSrc, setImgSrc] = useState<string>(lqip || "");
+  const initialLqip =
+    typeof lqip === "object" && lqip !== null && "src" in lqip
+      ? lqip.src
+      : (lqip as string) || "";
+  const [imgSrc, setImgSrc] = useState<string>(initialLqip);
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    // Dynamically load the _pre_url at runtime
     if (json && json._pre_url) {
       setSrc(json._pre_url);
       if (!lqip) {
@@ -50,122 +54,84 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
   };
 
   return (
-    <div
-      style={{ position: "relative", display: "inline-block", width: "100%" }}
-    >
-      <div
-        style={{ position: "relative", display: "inline-block", width: "100%" }}
+    <div className="relative w-full my-20 group overflow-visible">
+      <motion.div
+        layout
+        className="relative overflow-hidden rounded-2xl shadow-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5"
+        initial={{ opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img
+        <motion.img
           src={imgSrc}
           alt="photo"
+          className="w-full h-auto block"
           style={{
-            maxWidth: "100%",
-            borderRadius: 8,
-            boxShadow: "0 2px 8px #ccc",
-            display: "block",
             cursor: showOriginal ? "default" : "pointer",
-            filter: showOriginal ? "none" : "blur(0.5px)",
+            filter: showOriginal
+              ? "none"
+              : "blur(1px) brightness(0.85) saturate(0.8)",
+            transition: "filter 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
           onClick={handleClick}
           draggable={false}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
+          animate={{ scale: hover && !showOriginal ? 1.01 : 1 }}
+          transition={{ duration: 0.4 }}
         />
-        {!showOriginal && hover && (
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -120%)",
-              background: "rgba(40,40,40,0.92)",
-              color: "#fff",
-              padding: "6px 16px",
-              borderRadius: 6,
-              fontSize: 14,
-              pointerEvents: "none",
-              zIndex: 10,
-              whiteSpace: "nowrap",
-              boxShadow: "0 2px 8px #0002",
-            }}
-          >
-            Click to see high-res photo :-)
-          </div>
-        )}
+
+        <AnimatePresence>
+          {!showOriginal && hover && !loading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, x: "-50%" }}
+              animate={{ opacity: 1, y: 0, x: "-50%" }}
+              exit={{ opacity: 0, y: 10, x: "-50%" }}
+              className="absolute bottom-10 left-1/2 bg-white/10 backdrop-blur-xl text-white px-8 py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase z-10 pointer-events-none shadow-2xl border border-white/20"
+            >
+              Reveal High-Res
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {loading && (
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(255,255,255,0.4)",
-              zIndex: 2,
-            }}
-          >
-            <span
-              style={{
-                width: 40,
-                height: 40,
-                border: "4px solid #bbb",
-                borderTop: "4px solid #333",
-                borderRadius: "50%",
-                display: "inline-block",
-                animation: "spin 1s linear infinite",
-                background: "transparent",
-              }}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-sm z-20">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+              className="w-10 h-10 border-[3px] border-white/20 border-t-white rounded-full"
             />
-            <style>{`
-                            @keyframes spin {
-                                0% { transform: rotate(0deg); }
-                                100% { transform: rotate(360deg); }
-                            }
-                        `}</style>
           </div>
         )}
-      </div>
+      </motion.div>
+
       {json && (
-        <table
-          style={{
-            marginTop: 12,
-            borderCollapse: "collapse",
-            width: "100%",
-            fontSize: "14px",
-            fontFamily: "Saira",
-            fontWeight: 600,
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="mt-8 p-6 md:p-8 rounded-2xl bg-white/5 dark:bg-zinc-900/40 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-800/50"
         >
-          <tbody>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-8">
             {Object.entries(json)
-              .filter(([key]) => !key.startsWith("_")) // Filter out keys starting with '_'
+              .filter(([key]) => !key.startsWith("_"))
               .map(([key, value]) => (
-                <tr key={key}>
-                  <td
-                    style={{
-                      padding: "4px 8px",
-                      borderBottom: "1px solid #eee",
-                      width: 160,
-                    }}
-                  >
+                <div key={key} className="flex flex-col gap-2">
+                  <span className="uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500 font-black text-[9px]">
                     {key}
-                  </td>
-                  <td
-                    style={{
-                      padding: "4px 8px",
-                      borderBottom: "1px solid #eee",
-                    }}
+                  </span>
+                  <span
+                    className="font-bold text-zinc-900 dark:text-zinc-100 text-xs tracking-tight break-words"
+                    style={{ fontFamily: "'Saira Variable', sans-serif" }}
                   >
                     {String(value)}
-                  </td>
-                </tr>
+                  </span>
+                </div>
               ))}
-          </tbody>
-        </table>
+          </div>
+        </motion.div>
       )}
     </div>
   );

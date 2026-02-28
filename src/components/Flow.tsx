@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { motion, type Variants } from "framer-motion";
 
 const LQ_IMAGES_JSON = "/lqImages.json";
-const COLUMN_COUNT = 3;
-const IMAGE_COUNT = 12;
+const COLUMN_COUNT = 4;
+const IMAGE_COUNT = 16;
 
 function shuffle<T>(arr: T[]): T[] {
   return arr
@@ -27,59 +28,67 @@ const Flow: React.FC = () => {
       });
   }, []);
 
+  const container: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const item: Variants = {
+    hidden: { opacity: 0, scale: 0.9, y: 20 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: 16,
-        padding: 16,
-        background: "#fafbfc",
-        borderRadius: 16,
-        boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-      }}
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 p-3 md:p-8 bg-zinc-100/20 dark:bg-white/[0.02] backdrop-blur-2xl rounded-[3rem] border border-black/[0.03] dark:border-white/[0.03] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.1)]"
     >
       {columns.map((col, idx) => (
         <div
           key={idx}
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
+          className={`flex-1 flex flex-col gap-3 md:gap-8 ${idx % 2 === 1 ? "mt-8 md:mt-12" : ""} ${idx >= 2 ? "hidden md:flex" : ""}`}
         >
           {col.map((img, i) => (
-            <div
+            <motion.div
               key={i}
+              variants={item}
+              className="relative w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-zinc-200 dark:bg-zinc-900 shadow-sm border border-black/5 dark:border-white/5"
               style={{
-                position: "relative",
-                width: "100%",
-                height: 160,
-                overflow: "hidden", // 裁剪超出部分
-                borderRadius: 12,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                aspectRatio:
+                  (idx + i) % 3 === 0
+                    ? "3/4"
+                    : (idx + i) % 3 === 1
+                      ? "1/1"
+                      : "4/3",
               }}
             >
               <img
                 src={img}
                 alt=""
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: "150%",
-                  height: "150%",
-                  transform: "translate(-50%, -50%)",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
                 loading="lazy"
               />
-            </div>
+            </motion.div>
           ))}
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
