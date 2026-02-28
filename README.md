@@ -23,6 +23,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 ### Optimized Workflow
 
 1. **Add Photos**: Create a new folder in `docs/` (e.g., `docs/my-trip/`) and drop your high-res photos there.
+   - **Recommendation**: Use `jpeg` format. `tiff` files are too large for web delivery, and `heic` compatibility is limited.
 2. **Process Series**:
    ```bash
    npm run process
@@ -58,6 +59,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 ### 简化工作流
 
 1. **新增作品**: 在 `docs/` 下创建文件夹（如 `docs/shanghai-streets/`），放入原始照片。
+   - **建议**: 推荐使用 `jpeg` 格式。`tiff` 文件体积过于庞大，而 `heic` 在部分浏览器（如 Chrome/Firefox）上的兼容性欠佳。
 2. **自动化处理**:
    ```bash
    npm run process
