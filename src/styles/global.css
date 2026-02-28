@@ -25,12 +25,7 @@ body {
   --tw-prose-headings: var(--color-zinc-900);
   --tw-prose-body: var(--color-zinc-700);
   --tw-prose-links: var(--color-zinc-900);
-}
-
-.dark .prose {
-  --tw-prose-headings: var(--color-zinc-100);
-  --tw-prose-body: var(--color-zinc-400);
-  --tw-prose-links: var(--color-zinc-100);
+  max-width: none;
 }
 
 .prose h2,
@@ -50,10 +45,6 @@ body {
   padding-left: 1.5rem;
 }
 
-.dark .prose h2 {
-  border-left-color: var(--color-zinc-100);
-}
-
 .prose h3 {
   font-size: 1.25rem; /* 20px */
   opacity: 0.9;
@@ -69,15 +60,114 @@ body {
   font-size: 1.05rem;
 }
 
-.prose p code {
-  background: var(--color-zinc-100);
+/* Fix Inline Code Block Visibility */
+.prose :not(pre) > code {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-zinc-900);
   padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 6px;
+  font-weight: 600;
+  font-style: normal;
 }
 
-.dark .prose p code {
-  background: var(--color-zinc-800);
+.prose pre {
+  background-color: var(--color-zinc-50) !important;
+  border: 1px solid var(--color-zinc-200);
+  border-radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose {
+    --tw-prose-headings: var(--color-zinc-100);
+    --tw-prose-body: var(--color-zinc-400);
+    --tw-prose-links: var(--color-zinc-100);
+  }
+
+  .prose h2 {
+    border-left-color: var(--color-zinc-100);
+  }
+
+  .prose :not(pre) > code {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-zinc-100);
+  }
+
+  .prose pre {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.prose .admonition {
+  margin: 3rem 0;
+  padding: 1.5rem 2rem;
+  border-left: 5px solid var(--color-zinc-900);
+  background-color: var(--color-zinc-50);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.prose .admonition-note::before {
+  content: "Note";
+  display: block;
+  font-family: "Montserrat Variable", sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-zinc-400);
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose .admonition {
+    border-left-color: var(--color-zinc-100);
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 1px;
+  }
+
+  .prose .admonition-note::before {
+    color: var(--color-zinc-600);
+  }
+}
+
+/* Admonition Variants */
+.prose .admonition-tip::before {
+  content: "Tip";
+}
+.prose .admonition-warning::before {
+  content: "Warning";
+}
+.prose .admonition-danger::before {
+  content: "Danger";
+}
+
+.prose .admonition-tip,
+.prose .admonition-warning,
+.prose .admonition-danger {
+  /* Inherit base styles from .admonition */
+}
+
+.prose .admonition-tip::before,
+.prose .admonition-warning::before,
+.prose .admonition-danger::before {
+  display: block;
+  font-family: "Montserrat Variable", sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-zinc-400);
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose .admonition-tip::before,
+  .prose .admonition-warning::before,
+  .prose .admonition-danger::before {
+    color: var(--color-zinc-600);
+  }
 }
 
 .prose img {
@@ -85,6 +175,8 @@ body {
   box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
 }
 
-.dark .prose img {
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+@media (prefers-color-scheme: dark) {
+  .prose img {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+  }
 }

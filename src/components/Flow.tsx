@@ -81,10 +81,7 @@ const Flow: React.FC = () => {
               <img
                 src={img}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-80 dark:opacity-60 transition-all duration-1000 ease-out"
-                style={{
-                  filter: "contrast(1.02) brightness(0.9) saturate(0.9)",
-                }}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
                 loading="lazy"
               />
             </motion.div>
