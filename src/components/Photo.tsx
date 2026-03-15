@@ -21,10 +21,20 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
   const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const initialLqip =
-    typeof lqip === "object" && lqip !== null && "src" in lqip
-      ? lqip.src
-      : (lqip as string) || "";
+  const getExtractedLqip = () => {
+    if (!lqip) return "";
+    if (typeof lqip === "string") return lqip;
+    if (typeof lqip === "object" && lqip !== null) {
+      if ("src" in lqip) return (lqip as any).src;
+      if ("default" in lqip) {
+        const d = (lqip as any).default;
+        if (typeof d === "string") return d;
+        if (typeof d === "object" && d !== null && "src" in d) return d.src;
+      }
+    }
+    return String(lqip);
+  };
+  const initialLqip = getExtractedLqip();
   const [imgSrc, setImgSrc] = useState<string>(initialLqip);
   const [hover, setHover] = useState(false);
 
@@ -58,10 +68,6 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
       <motion.div
         layout
         className="relative overflow-hidden rounded-2xl shadow-2xl bg-zinc-100 dark:bg-zinc-900 border border-black/5 dark:border-white/5"
-        initial={{ opacity: 0, scale: 0.98 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.img
           src={imgSrc}
@@ -107,13 +113,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
       </motion.div>
 
       {json && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="mt-8 p-6 md:p-8 rounded-2xl bg-white/5 dark:bg-zinc-900/40 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-800/50"
-        >
+        <motion.div className="mt-8 p-6 md:p-8 rounded-2xl bg-white/5 dark:bg-zinc-900/40 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-800/50">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-8">
             {Object.entries(json)
               .filter(([key]) => !key.startsWith("_"))
