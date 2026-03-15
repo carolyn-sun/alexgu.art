@@ -30,7 +30,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
    ```
    This automatically fixes filenames, extracts EXIF data to `.json` files, and generates low-quality thumbnails (`_lq.jpeg`) for fast loading.
 3. **Draft Content**: Create an `index.mdx` in your folder. The site will automatically detect and include it in the "Selected Series" on the home page.
-   - Use `<Photo json={filename} />` for images.
+   - Use standard Markdown syntax `![Image Title](./filename)` to insert images. The site will automatically resolve EXIF metadata, connect the LQIP thumbnail, and render the `<Photo />` component.
    - Use `:::note` for callouts.
 4. **Sync to Cloud**:
    ```bash
@@ -67,7 +67,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
    脚本将自动：修正非法文件名、提取照片 EXIF 信息至 `.json` 文件、生成用于预加载的低画质略缩图 (`_lq.jpeg`)。
 3. **内容创作**: 在文件夹内创建 `index.mdx`。
    - 首页会自动识别并添加至 "Selected Series"。
-   - 使用 `<Photo json={filename} />` 组件引入照片。
+   - 仅需使用基础 Markdown 语法 `![图片说明](./图片名称)` 即可。系统会自动解析同名的 EXIF JSON 数据提取与缩略图加载，并渲染的 `<Photo />` 组件。
 4. **同步 R2**:
    ```bash
    npm run sync

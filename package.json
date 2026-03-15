@@ -14,8 +14,8 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/check": "^0.9.7",
+    "@astrojs/mdx": "^5.0.0",
     "@eslint/config-array": "^0.21.1",
     "@eslint/object-schema": "^2.1.7",
     "@fontsource-variable/montserrat": "^5.2.8",
@@ -33,12 +33,12 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^5.0.0",
     "@tailwindcss/vite": "^4.2.1",
     "@types/node": "^25.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^5.18.0",
+    "astro": "^6.0.4",
     "html-minifier-terser": "^7.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.3",
