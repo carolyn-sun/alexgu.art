@@ -19,6 +19,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 
 - **Node.js**: v20 or later
 - **Cloudflare Wrangler**: For R2 sync
+- **RClone**: For R2 sync
 
 ### Optimized Workflow
 
