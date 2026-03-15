@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://alexgu.art/sitemap.xml
+Sitemap: https://alexgu.art/sitemap-index.xml
