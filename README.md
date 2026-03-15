@@ -24,20 +24,24 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 
 1. **Add Photos**: Create a new folder in `docs/` (e.g., `docs/my-trip/`) and drop your high-res photos there.
    - **Recommendation**: Use `jpeg` format. `tiff` files are too large for web delivery, and `heic` compatibility is limited.
-2. **Process Series**:
+2. **Process Everything**:
+
    ```bash
    npm run process
    ```
-   This automatically fixes filenames, extracts EXIF data to `.json` files, and generates low-quality thumbnails (`_lq.jpeg`) for fast loading.
-3. **Draft Content**: Create an `index.mdx` in your folder. The site will automatically detect and include it in the "Selected Series" on the home page.
-   - Use standard Markdown syntax `![Image Title](./filename)` to insert images. The site will automatically resolve EXIF metadata, connect the LQIP thumbnail, and render the `<Photo />` component.
+
+   This one-stop command automates the entire workflow:
+   - **Filename Fixing**: Removes spaces and special characters.
+   - **EXIF Extraction**: Generates metadata JSON files for each photo.
+   - **LQIP Generation**: Creates low-quality thumbnails (`_lq.jpeg`) for fast loading.
+   - **MDX Auto-generation**: Creates `index.mdx` gallery pages for new folders.
+   - **Gallery Indexing**: Updates `lqImages.json` for frontend display.
+   - **R2 Sync (RClone/Wrangler)**: Uploads high-res photos to Cloudflare and cleans up local storage.
+
+3. **Edit Content**: Open the auto-generated `index.mdx` in your folder to add captions or custom text. The site automatically detects it for the "Selected Series".
+   - Standard Markdown `![Image Title](./filename)` renders the `<Photo />` component with EXIF metadata.
    - Use `:::note` for callouts.
-4. **Sync to Cloud**:
-   ```bash
-   npm run sync
-   ```
-   Uploads photos to Cloudflare R2.
-5. **Deploy**:
+4. **Deploy**:
    ```bash
    npm run build
    ```
@@ -59,22 +63,27 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 ### 简化工作流
 
 1. **新增作品**: 在 `docs/` 下创建文件夹（如 `docs/shanghai-streets/`），放入原始照片。
-   - **建议**: 推荐使用 `jpeg` 格式。`tiff` 文件体积过于庞大，而 `heic` 在部分浏览器（如 Chrome/Firefox）上的兼容性欠佳。
-2. **自动化处理**:
+   - **建议**: 推荐使用 `jpeg` 格式。
+2. **一键处理**:
+
    ```bash
    npm run process
    ```
-   脚本将自动：修正非法文件名、提取照片 EXIF 信息至 `.json` 文件、生成用于预加载的低画质略缩图 (`_lq.jpeg`)。
-3. **内容创作**: 在文件夹内创建 `index.mdx`。
+
+   该环境自动化处理以下 6 个步骤：
+   - **名称修正**: 移除路径中的空格与特殊字符。
+   - **EXIF 提取**: 自动生成每张照片的元数据 JSON 文件。
+   - **略缩图生成**: 生成用于极致性能加载的 LQIP (`_lq.jpeg`)。
+   - **MDX 自动生成**: 为新文件夹自动补全 `index.mdx` 页面。
+   - **全局索引更新**: 更新全局 `lqImages.json` 用于画廊渲染。
+   - **R2 同步 (RClone)**: 自动上传原图至云端并清理本地冗余。
+
+3. **内容润色**: 编辑自动生成的 `index.mdx`。
    - 首页会自动识别并添加至 "Selected Series"。
-   - 仅需使用基础 Markdown 语法 `![图片说明](./图片名称)` 即可。系统会自动解析同名的 EXIF JSON 数据提取与缩略图加载，并渲染的 `<Photo />` 组件。
-4. **同步 R2**:
+   - 基础 Markdown 语法 `![图片说明](./图片名称)` 即可自动解析 EXIF 数据。
+4. **发布**:
    ```bash
-   npm run sync
-   ```
-5. **发布**:
-   ```bash
-   git push
+   npm run build && git push
    ```
    推送代码后，Cloudflare Pages 将自动构建并发布。
 

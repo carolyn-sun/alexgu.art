@@ -22,8 +22,13 @@ execSync("node src/scripts/generate-index-mdx.mjs", { stdio: "inherit" });
 console.log("Generating lqImages.json...");
 execSync("node src/scripts/generate-lq-json.mjs", { stdio: "inherit" });
 
-// 6. Sync to Cloudflare R2
-console.log("Syncing to R2...");
-execSync("src/scripts/wrangler-to-r2.sh", { stdio: "inherit" });
+// 6. Sync to Cloudflare R2 (using rclone as priority)
+console.log("Syncing to R2 via rclone...");
+try {
+  execSync("src/scripts/rclone-to-r2.sh", { stdio: "inherit" });
+} catch (e) {
+  console.warn("Rclone sync failed, falling back to wrangler sync...");
+  execSync("src/scripts/wrangler-to-r2.sh", { stdio: "inherit" });
+}
 
 console.log("Preparation complete!");

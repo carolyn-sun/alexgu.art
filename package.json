@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build && node src/scripts/generate-lq-json.mjs",
-    "process": "./fix-name.sh && node src/scripts/generate-json.mjs && node src/scripts/generate-lqip.mjs",
+    "build": "astro build",
+    "process": "node src/scripts/prepare.mjs",
     "sync": "src/scripts/wrangler-to-r2.sh",
     "preview": "astro preview",
     "astro": "astro",
