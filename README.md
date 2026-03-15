@@ -6,7 +6,7 @@
 
 ## English
 
-This is the source code for [alexgu.art](https://alexgu.art), a premium photography archive built with **Astro 5**, **React**, and **Framer Motion**. It is optimized for high-performance visual storytelling, featuring automated EXIF extraction and cinematic animations.
+This is the source code for [alexgu.art](https://alexgu.art), a premium photography archive built with **Astro 6**, **React**, and **Framer Motion**. It is optimized for high-performance visual storytelling, featuring automated EXIF extraction and cinematic animations.
 
 ### Tech Stack
 
@@ -47,7 +47,7 @@ This is the source code for [alexgu.art](https://alexgu.art), a premium photogra
 
 ## 中文
 
-[Alexander Gu](https://github.com/gjc1202) 的摄影作品集与数字存档。基于 **Astro 5** 构建，追求极致的视觉体验与呈现。
+[Alexander Gu](https://github.com/gjc1202) 的摄影作品集与数字存档。基于 **Astro 6** 构建，追求极致的视觉体验与呈现。
 
 ### 技术栈
 
