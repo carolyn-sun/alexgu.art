@@ -27,7 +27,7 @@ yarn-error.log*
 #*lq.jpeg
 #*lg.jpg
 
-static/lqImages.json
+public/lqImages.json
 src/scripts/prepare.js
 
 .wrangler
