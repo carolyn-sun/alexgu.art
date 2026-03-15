@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <title>{title}</title>
+    <style is:global>
+        /* 1. Isolation: Reset everything to prevent leaks from main site */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            overflow: hidden !important;
+            background-color: #3855a2 !important; /* Classic OS X Blue */
+            font-family: "Lucida Grande", "Geneva", Helvetica, Arial, sans-serif !important;
+            user-select: none !important;
+        }
+
+        /* Essential Reset for layout */
+        * {
+            box-sizing: border-box !important;
+        }
+
+        .os-root {
+            position: fixed !important;
+            inset: 0 !important;
+            background-color: #3855a2 !important;
+            z-index: 999999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Anti-leak: Hide any potential global noise or grain overlays */
+        .fixed.inset-0.pointer-events-none.z-\[9999\] {
+            display: none !important;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="os-root">
+        <slot />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+---
+import OSLayout from "../layouts/OSLayout.astro";
+import MacOSSimulation from "../components/MacOSSimulation.tsx";
+import fs from "node:fs/promises";
+import path from "node:path";
+
+import exifr from "exifr";
+
+// Async data fetch for the OS simulation
+async function getOSData() {
+  const docsDir = path.join(process.cwd(), "public", "docs");
+  let entries = [];
+  try {
+    entries = await fs.readdir(docsDir, { withFileTypes: true });
+  } catch (e) {
+    console.error("OS Page: Failed to read docs directory", e);
+  }
+  
+  const galleries = await Promise.all(
+    entries
+      .filter((e) => e.isDirectory() && !e.name.startsWith("."))
+      .map(async (e) => {
+        const galleryName = e.name;
+        const galleryPath = path.join(docsDir, galleryName);
+        const files = await fs.readdir(galleryPath);
+        
+        // Map top photo files for thumbnail preview
+        const photoFiles = files.filter(f => f.endsWith("_lq.jpeg")).slice(0, 16);
+        const photos = await Promise.all(photoFiles.map(async (f) => {
+          const baseName = f.replace("_lq.jpeg", "");
+          const jsonPath = path.join(galleryPath, `${baseName}.json`);
+          let exif = null;
+
+          try {
+            const jsonExists = await fs.access(jsonPath).then(() => true).catch(() => false);
+            if (jsonExists) {
+                const data = JSON.parse(await fs.readFile(jsonPath, "utf-8"));
+                
+                // Keep the entire object, but also provide a cleaned version for the UI helper
+                exif = data;
+            }
+          } catch (err) {
+            console.error(`Error reading metadata JSON for ${f}:`, err);
+          }
+
+          return {
+            name: baseName.replace(/_/g, " ").toUpperCase(),
+            url: `/docs/${galleryName}/${f}`,
+            exif
+          };
+        }));
+        
+        // Get directory title
+        const title = galleryName.replace(/-/g, " ").toUpperCase();
+        const coverUrl = photos.length > 0 ? photos[0].url : "";
+          
+        return {
+          slug: galleryName,
+          title,
+          coverUrl,
+          photos
+        };
+      })
+  );
+  
+  return galleries;
+}
+
+const galleries = await getOSData();
+---
+
+<OSLayout title="OS X Aqua Classic | Alexander Gu">
+  <MacOSSimulation client:only="react" galleries={galleries} />
+</OSLayout>
