@@ -26,7 +26,19 @@ const { title } = Astro.props;
             background-color: #3855a2 !important; /* Classic OS X Blue */
             font-family: "Lucida Grande", "Geneva", Helvetica, Arial, sans-serif !important;
             user-select: none !important;
+            cursor: default !important;
+            -webkit-user-select: none !important;
         }
+
+        /* Re-enable selection for inputs and textareas */
+        input, textarea, [contenteditable="true"] {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            cursor: text !important;
+        }
+
+        /* Re-enable selection for the personal website text in Mail if needed, 
+           or just keep it clean as per user request to 'prevent interference' */
 
         /* Essential Reset for layout */
         * {
