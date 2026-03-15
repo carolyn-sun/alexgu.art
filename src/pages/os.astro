@@ -3,13 +3,14 @@ import OSLayout from "../layouts/OSLayout.astro";
 import MacOSSimulation from "../components/MacOSSimulation.tsx";
 import fs from "node:fs/promises";
 import path from "node:path";
+import type { Dirent } from "node:fs";
 
-import exifr from "exifr";
+
 
 // Async data fetch for the OS simulation
 async function getOSData() {
   const docsDir = path.join(process.cwd(), "public", "docs");
-  let entries = [];
+  let entries: Dirent[] = [];
   try {
     entries = await fs.readdir(docsDir, { withFileTypes: true });
   } catch (e) {

@@ -16,7 +16,7 @@ interface Gallery {
 interface WindowProps {
   id: string;
   title: string;
-  type: "folder" | "preview" | "root" | "settings" | "mail";
+  type: "folder" | "preview" | "root" | "settings" | "mail" | "browser";
   content: any;
   zIndex: number;
   onClose: (id: string) => void;
@@ -35,8 +35,22 @@ const MacOSWindow: React.FC<WindowProps> = ({
   initialPos,
 }) => {
   const [size, setSize] = useState({
-    width: type === "preview" ? 600 : type === "settings" ? 600 : 520,
-    height: type === "preview" ? 450 : type === "settings" ? 450 : 420,
+    width:
+      type === "preview"
+        ? 600
+        : type === "settings"
+          ? 600
+          : type === "browser"
+            ? 800
+            : 520,
+    height:
+      type === "preview"
+        ? 450
+        : type === "settings"
+          ? 450
+          : type === "browser"
+            ? 600
+            : 420,
   });
   const [isResizing, setIsResizing] = useState(false);
 
@@ -296,6 +310,50 @@ const MacOSWindow: React.FC<WindowProps> = ({
               </div>
             </div>
           </div>
+        ) : type === "browser" ? (
+          <div className="flex flex-col h-full bg-white">
+            {/* Browser Toolbar */}
+            <div className="h-10 bg-gradient-to-b from-[#fdfdfd] to-[#dcdcdc] border-b border-[#aaa] flex items-center px-4 gap-4 shadow-sm">
+              <div className="flex gap-2">
+                <button className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors">
+                  <span className="text-[10px]">◀</span>
+                </button>
+                <button className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors">
+                  <span className="text-[10px]">▶</span>
+                </button>
+              </div>
+              <div className="flex-1 max-w-[500px] relative">
+                <input
+                  type="text"
+                  defaultValue={content.url}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const target = e.target as HTMLInputElement;
+                      let url = target.value;
+                      if (!url.startsWith("http")) url = "https://" + url;
+                      content.onNavigate(url);
+                    }
+                  }}
+                  className="w-full h-7 border border-[#999] rounded text-[12px] px-3 shadow-inner bg-white focus:outline-none focus:ring-1 focus:ring-[#3855a2]"
+                />
+              </div>
+              <button
+                onClick={() => content.onNavigate(content.url)}
+                className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors"
+              >
+                <span className="text-[10px]">↻</span>
+              </button>
+            </div>
+            {/* Browser Content */}
+            <div className="flex-1 bg-white relative">
+              <iframe
+                src={content.url}
+                className="w-full h-full border-none"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                title="Browser View"
+              />
+            </div>
+          </div>
         ) : (
           <div className="flex bg-[#f0f0f0] min-w-[500px]">
             {/* Left side: Image */}
@@ -385,7 +443,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
 const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
   const [windows, setWindows] = useState<any[]>([]);
   const [time, setTime] = useState(new Date());
-  const [maxZ, setMaxZ] = useState(100);
+  const [, setMaxZ] = useState(100);
   const [background, setBackground] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("macos-simulation-bg");
@@ -549,6 +607,40 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
     });
   };
 
+  const openBrowser = (url: string = "https://alexgu.art") => {
+    const id = "browser";
+    if (windows.find((w) => w.id === id)) {
+      onFocus(id);
+      return;
+    }
+    setMaxZ((prev) => {
+      const newZ = prev + 1;
+      setWindows((wins) => [
+        ...wins,
+        {
+          id,
+          title: "Safari",
+          type: "browser",
+          content: {
+            url,
+            onNavigate: (newUrl: string) => {
+              setWindows((prevWins) =>
+                prevWins.map((w) =>
+                  w.id === id
+                    ? { ...w, content: { ...w.content, url: newUrl } }
+                    : w,
+                ),
+              );
+            },
+          },
+          initialPos: { x: 60, y: 60 },
+          zIndex: newZ,
+        },
+      ]);
+      return newZ;
+    });
+  };
+
   const onClose = (id: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== id));
   };
@@ -671,22 +763,55 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             />
           </div>
 
-          {/* Settings App */}
+          {/* Browser App */}
           <div
-            onClick={openSettings}
+            onClick={() => openBrowser()}
             style={{ width: "38px", height: "38px" }}
             className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
           >
-            <div className="w-full h-full bg-gradient-to-tr from-[#999] via-[#ccc] to-[#eee] rounded-lg border border-white/50 shadow-md flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full relative flex items-center justify-center">
-                <span className="text-2xl drop-shadow-md select-none transform transition-transform group-hover:rotate-45">
-                  ⚙️
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent h-1/2 rounded-t-lg" />
+            <div
+              className="w-full h-full rounded-full border border-white/40 shadow-lg flex items-center justify-center overflow-hidden relative"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 30%, #4facfe 0%, #0061ff 100%)",
+              }}
+            >
+              {/* Compass Face */}
+              <div className="absolute inset-[3px] rounded-full border border-white/20 flex items-center justify-center">
+                {/* Internal Scale */}
+                <div className="absolute inset-0 opacity-40">
+                  {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                    <div
+                      key={deg}
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ transform: `rotate(${deg}deg)` }}
+                    >
+                      <div className="h-full w-[1px] bg-white pt-1 pb-1 flex flex-col justify-between items-center">
+                        <div className="h-1 w-[1px] bg-white"></div>
+                        <div className="h-1 w-[1px] bg-white"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Needle */}
+                <div className="relative w-full h-full flex items-center justify-center rotate-45 transform transition-transform duration-700 group-hover:rotate-[405deg]">
+                  <div className="w-[3px] h-full flex flex-col items-center">
+                    {/* Top half (Red) */}
+                    <div className="w-0 h-0 border-l-[3px] border-r-[3px] border-b-[18px] border-l-transparent border-r-transparent border-b-[#ff3b30] drop-shadow-sm"></div>
+                    {/* Bottom half (White) */}
+                    <div className="w-0 h-0 border-l-[3px] border-r-[3px] border-t-[18px] border-l-transparent border-r-transparent border-t-[#f2f2f2] drop-shadow-sm"></div>
+                  </div>
+                  {/* Center point */}
+                  <div className="absolute w-1 h-1 bg-white rounded-full shadow-sm z-10"></div>
+                </div>
               </div>
+              {/* Top Gloss */}
+              <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent rounded-t-full pointer-events-none" />
+              {/* Rim highlight */}
+              <div className="absolute inset-0 rounded-full border-t border-white/50 pointer-events-none" />
             </div>
             <div
-              className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "settings") ? "opacity-100" : "opacity-0"}`}
+              className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "browser") ? "opacity-100" : "opacity-0"}`}
             />
           </div>
 
@@ -706,6 +831,25 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             </div>
             <div
               className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "mail") ? "opacity-100" : "opacity-0"}`}
+            />
+          </div>
+
+          {/* Settings App */}
+          <div
+            onClick={openSettings}
+            style={{ width: "38px", height: "38px" }}
+            className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
+          >
+            <div className="w-full h-full bg-gradient-to-tr from-[#999] via-[#ccc] to-[#eee] rounded-lg border border-white/50 shadow-md flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full relative flex items-center justify-center">
+                <span className="text-2xl drop-shadow-md select-none transform transition-transform group-hover:rotate-45">
+                  ⚙️
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent h-1/2 rounded-t-lg" />
+              </div>
+            </div>
+            <div
+              className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "settings") ? "opacity-100" : "opacity-0"}`}
             />
           </div>
         </div>

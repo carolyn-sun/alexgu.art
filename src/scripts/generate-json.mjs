@@ -1,7 +1,7 @@
-const { readdir, readFile, writeFile, stat, access } = require("fs/promises");
-const { join, extname, basename } = require("path");
-const { exec } = require("child_process");
-const exifr = require("exifr");
+import { readdir, readFile, writeFile, stat, access } from "fs/promises";
+import { join, extname, basename } from "path";
+import { exec } from "child_process";
+import exifr from "exifr";
 
 const DOC_DIR = "docs";
 const SUPPORTED_EXT = /\.(jpe?g|tiff?|heic)$/i;

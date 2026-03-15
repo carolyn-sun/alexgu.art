@@ -1,6 +1,6 @@
-const { readdir, access, writeFile } = require("fs/promises");
-const { join, extname, basename } = require("path");
-const { exec } = require("child_process");
+import { readdir, access, writeFile } from "fs/promises";
+import { join, extname, basename } from "path";
+import { exec } from "child_process";
 
 const DOCS_DIR = "docs";
 const INDEX_FILES = ["index.mdx", "index.md", "index.html", "index.ts"];
