@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 function processFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -11,8 +11,10 @@ function processFile(filePath) {
     /import\s+([A-Za-z0-9_]+)\s+from\s+['"]\.\/([^'"]+)\.json['"]/g;
   const map = {};
   let match;
-  while ((match = jsonImportRegex.exec(content)) !== null) {
+  match = jsonImportRegex.exec(content);
+  while (match !== null) {
     map[match[1]] = match[2];
+    match = jsonImportRegex.exec(content);
   }
 
   content = content.replace(/import\s+Photo\s+from\s+[^;]+;?\n?/g, "");

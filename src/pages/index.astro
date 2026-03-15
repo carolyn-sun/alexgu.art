@@ -4,11 +4,18 @@ import Flow from "../components/Flow.tsx";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+interface MdxDoc {
+  frontmatter: {
+    title?: string;
+  };
+}
+
 const allDocs = import.meta.glob("../../docs/**/index.{md,mdx}", {
   eager: true,
-});
+}) as Record<string, MdxDoc>;
+
 const galleries = await Promise.all(
-  Object.entries(allDocs).map(async ([mdxKey, doc]: [string, any]) => {
+  Object.entries(allDocs).map(async ([mdxKey, doc]) => {
     const gallery = mdxKey.split("/").slice(-2, -1)[0];
     const title =
       doc.frontmatter.title ||
@@ -55,7 +62,7 @@ const galleries = await Promise.all(
           coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
         }
       }
-    } catch (e) {}
+    } catch (_e) {}
 
     return { gallery, title, coverUrl };
   }),

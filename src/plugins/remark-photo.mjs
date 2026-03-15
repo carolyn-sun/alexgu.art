@@ -1,5 +1,5 @@
-import { visit } from "unist-util-visit";
 import path from "node:path";
+import { visit } from "unist-util-visit";
 
 export function remarkAutoPhoto() {
   return (tree, file) => {
@@ -9,7 +9,7 @@ export function remarkAutoPhoto() {
 
     // Check if Photo is already imported
     visit(tree, "mdxjsEsm", (node) => {
-      if (node.value && node.value.includes("Photo.tsx")) {
+      if (node.value?.includes("Photo.tsx")) {
         hasPhotoImport = true;
       }
     });
@@ -136,7 +136,7 @@ export function remarkAutoPhoto() {
         // Try to dynamically compute the path to Photo.tsx
         let photoTsxPath = "../../src/components/Photo.tsx"; // default fallback
 
-        if (file && file.path && file.cwd) {
+        if (file?.path && file.cwd) {
           const absolutePhotoTsx = path.join(
             file.cwd,
             "src/components/Photo.tsx",
@@ -145,7 +145,7 @@ export function remarkAutoPhoto() {
             path.dirname(file.path),
             absolutePhotoTsx,
           );
-          if (!relPath.startsWith(".")) relPath = "./" + relPath;
+          if (!relPath.startsWith(".")) relPath = `./${relPath}`;
 
           // Replace backslashes with forward slashes for Windows (just in case)
           photoTsxPath = relPath.split(path.sep).join("/");

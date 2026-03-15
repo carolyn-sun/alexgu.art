@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 interface ExifData {
   [key: string]: any;
@@ -13,8 +14,8 @@ interface PhotoProps {
 
 const getLqipSrc = (src: string) => {
   const extIdx = src.lastIndexOf(".");
-  if (extIdx === -1) return src + "_lq.jpeg";
-  return src.slice(0, extIdx) + "_lq.jpeg";
+  if (extIdx === -1) return `${src}_lq.jpeg`;
+  return `${src.slice(0, extIdx)}_lq.jpeg`;
 };
 
 const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
@@ -39,7 +40,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    if (json && json._pre_url) {
+    if (json?._pre_url) {
       setSrc(json._pre_url);
       if (!lqip) {
         setImgSrc(getLqipSrc(json._pre_url));
@@ -71,7 +72,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
       >
         <motion.img
           src={imgSrc}
-          alt="photo"
+          alt="Photography gallery item"
           className="w-full h-auto block"
           style={{
             cursor: showOriginal ? "default" : "pointer",

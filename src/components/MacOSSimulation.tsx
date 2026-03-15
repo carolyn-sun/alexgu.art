@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Photo {
   name: string;
@@ -104,6 +105,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
       <div className="h-8 flex items-center px-3 gap-2 bg-gradient-to-b from-[#f6f6f6] via-[#d1d1d1] to-[#a5a5a5] rounded-t-xl border-b border-[#666] cursor-default relative shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
         <div className="flex gap-1.5 z-10 px-1">
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onClose(id);
@@ -114,8 +116,14 @@ const MacOSWindow: React.FC<WindowProps> = ({
               ×
             </span>
           </button>
-          <button className="w-3.5 h-3.5 rounded-full bg-[#febc2e] border border-[#a37c15] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]"></button>
-          <button className="w-3.5 h-3.5 rounded-full bg-[#28c840] border border-[#1d8a2d] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]"></button>
+          <button
+            type="button"
+            className="w-3.5 h-3.5 rounded-full bg-[#febc2e] border border-[#a37c15] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]"
+          ></button>
+          <button
+            type="button"
+            className="w-3.5 h-3.5 rounded-full bg-[#28c840] border border-[#1d8a2d] shadow-[inset_0_1px_1px_rgba(0,0,0,0.2)]"
+          ></button>
         </div>
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <span className="text-[13px] font-bold text-[#333] drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]">
@@ -128,9 +136,10 @@ const MacOSWindow: React.FC<WindowProps> = ({
       <div className="flex-1 overflow-auto bg-white relative p-6 pointer-events-auto">
         {type === "folder" ? (
           <div className="grid grid-cols-4 gap-6">
-            {content.photos.map((photo: Photo, idx: number) => (
-              <div
-                key={idx}
+            {content.photos.map((photo: Photo) => (
+              <button
+                key={photo.url}
+                type="button"
                 className="flex flex-col items-center gap-2 group cursor-pointer"
                 onDoubleClick={(e) => {
                   e.stopPropagation();
@@ -147,14 +156,15 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 <span className="text-[11px] text-center font-bold px-1 rounded group-hover:bg-[#3855a2] group-hover:text-white line-clamp-2 leading-tight">
                   {photo.name}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         ) : type === "root" ? (
           <div className="grid grid-cols-4 gap-8">
-            {content.galleries.map((g: Gallery, idx: number) => (
-              <div
-                key={idx}
+            {content.galleries.map((g: Gallery) => (
+              <button
+                key={g.slug}
+                type="button"
                 className="flex flex-col items-center gap-2 group cursor-pointer"
                 onDoubleClick={() => content.onOpenFolder(g)}
               >
@@ -163,7 +173,10 @@ const MacOSWindow: React.FC<WindowProps> = ({
                     style={{ width: "56px", height: "56px" }}
                     className="drop-shadow-md group-hover:brightness-110"
                     viewBox="0 0 48 48"
+                    role="img"
+                    aria-label="Gallery folder icon"
                   >
+                    <title>Gallery folder</title>
                     <path
                       d="M4 10C4 8.89543 4.89543 8 6 8H18L22 12H42C43.1046 12 44 12.8954 44 14V38C44 39.1046 43.1046 40 42 40H6C4.89543 40 4 39.1046 4 38V10Z"
                       fill="#78B9EB"
@@ -182,7 +195,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 <span className="text-[11px] font-bold text-center px-1 group-hover:bg-[#3855a2] group-hover:text-white rounded uppercase tracking-tighter">
                   {g.title}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         ) : type === "settings" ? (
@@ -201,6 +214,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 ].map((c) => (
                   <button
                     key={c.color}
+                    type="button"
                     onClick={() =>
                       content.onSetBg({ type: "color", val: c.color })
                     }
@@ -223,9 +237,10 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 Photography Wallpapers
               </h4>
               <div className="grid grid-cols-4 gap-4 overflow-auto pr-2 pb-4 h-full">
-                {content.allPhotos.map((p: Photo, idx: number) => (
+                {content.allPhotos.map((p: Photo) => (
                   <button
-                    key={idx}
+                    key={p.url}
+                    type="button"
                     onClick={() =>
                       content.onSetBg({ type: "image", val: p.url })
                     }
@@ -233,6 +248,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                   >
                     <img
                       src={p.url}
+                      alt={p.name}
                       className="w-full h-16 object-cover border border-[#ccc]"
                     />
                     <span className="text-[9px] font-bold text-[#888] line-clamp-1">
@@ -315,10 +331,16 @@ const MacOSWindow: React.FC<WindowProps> = ({
             {/* Browser Toolbar */}
             <div className="h-10 bg-gradient-to-b from-[#fdfdfd] to-[#dcdcdc] border-b border-[#aaa] flex items-center px-4 gap-4 shadow-sm">
               <div className="flex gap-2">
-                <button className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors">
+                <button
+                  type="button"
+                  className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors"
+                >
                   <span className="text-[10px]">◀</span>
                 </button>
-                <button className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors">
+                <button
+                  type="button"
+                  className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors"
+                >
                   <span className="text-[10px]">▶</span>
                 </button>
               </div>
@@ -330,7 +352,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                     if (e.key === "Enter") {
                       const target = e.target as HTMLInputElement;
                       let url = target.value;
-                      if (!url.startsWith("http")) url = "https://" + url;
+                      if (!url.startsWith("http")) url = `https://${url}`;
                       content.onNavigate(url);
                     }
                   }}
@@ -338,6 +360,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 />
               </div>
               <button
+                type="button"
                 onClick={() => content.onNavigate(content.url)}
                 className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors"
               >
@@ -349,7 +372,13 @@ const MacOSWindow: React.FC<WindowProps> = ({
               {content.isLoading && (
                 <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-8 text-center">
                   <div className="mb-4 text-[#3855a2]">
-                    <svg className="animate-spin h-8 w-8" viewBox="0 0 24 24">
+                    <svg
+                      className="animate-spin h-8 w-8"
+                      viewBox="0 0 24 24"
+                      role="img"
+                      aria-label="Loading indicator"
+                    >
+                      <title>Loading...</title>
                       <circle
                         className="opacity-25"
                         cx="12"
@@ -468,12 +497,17 @@ const MacOSWindow: React.FC<WindowProps> = ({
 
       {/* Classic Resize Handle (Bottom Right) */}
       {type !== "preview" && (
-        <div
+        <button
+          type="button"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") startResize(e as any);
+          }}
           onMouseDown={startResize}
           className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize z-[100] flex items-end justify-end p-0.5 group"
+          aria-label="Resize window"
         >
           <div className="w-3 h-3 border-r-2 border-b-2 border-black/20 group-hover:border-black/40 transition-colors" />
-        </div>
+        </button>
       )}
     </motion.div>
   );
@@ -489,7 +523,7 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
       if (saved) {
         try {
           return JSON.parse(saved);
-        } catch (e) {
+        } catch (_e) {
           console.error("Failed to parse background");
         }
       }
@@ -714,12 +748,16 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
           <span className="px-2 hover:bg-[#3855a2] hover:text-white rounded transition-colors cursor-default">
             Finder
           </span>
-          <span
+          <button
+            type="button"
             className="px-2 hover:bg-[#3855a2] hover:text-white rounded transition-colors cursor-default font-medium opacity-60"
             onClick={openSettings}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") openSettings();
+            }}
           >
             Preferences
-          </span>
+          </button>
         </div>
         <div className="flex items-center gap-4 text-[12px] font-bold text-black">
           <span className="drop-shadow-[0_1px_0_rgba(255,255,255,0.8)]">
@@ -736,11 +774,15 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
       <div className="flex-1 relative mt-7 pointer-events-none overflow-hidden">
         {/* Desktop Icons - Right-to-Left Wrapping Grid */}
         <div className="absolute inset-0 right-6 top-6 bottom-6 flex flex-col flex-wrap-reverse content-start gap-x-4 gap-y-8 items-end pointer-events-auto">
-          {galleries.map((gallery, idx) => (
-            <div
-              key={idx}
+          {galleries.map((gallery) => (
+            <button
+              key={gallery.slug}
+              type="button"
               className="w-24 group cursor-pointer flex flex-col items-center gap-1"
               onDoubleClick={() => openFolder(gallery)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") openFolder(gallery);
+              }}
               onPointerDown={(e) => e.stopPropagation()}
             >
               <div className="w-10 h-10 relative flex items-center justify-center">
@@ -748,7 +790,10 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
                   style={{ width: "40px", height: "40px" }}
                   className="drop-shadow-md group-active:brightness-90 transition-all"
                   viewBox="0 0 48 48"
+                  role="img"
+                  aria-label="Folder icon"
                 >
+                  <title>Folder</title>
                   <path
                     d="M4 10C4 8.89543 4.89543 8 6 8H18L22 12H42C43.1046 12 44 12.8954 44 14V38C44 39.1046 43.1046 40 42 40H6C4.89543 40 4 39.1046 4 38V10Z"
                     fill="#78B9EB"
@@ -767,7 +812,7 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
               <span className="text-[11px] text-white font-bold px-2 py-0.5 rounded shadow-md group-active:bg-[#3855a2] bg-black/40 backdrop-blur-sm text-center leading-tight">
                 {gallery.title}
               </span>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -787,7 +832,7 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
       </div>
 
       {/* 3. Dock - High Fidelity 2000s Aqua Glass Strip */}
-      <div className="h-16 flex items-end justify-center pb-2 pointer-events-auto">
+      <div className="absolute bottom-0 inset-x-0 h-16 flex items-end justify-center pb-2 pointer-events-auto z-[50]">
         <div
           className="h-12 px-3 flex items-center shadow-[0_15px_35px_rgba(0,0,0,0.4)] relative border-t border-l border-r border-white/60 rounded-xl gap-3"
           style={{
@@ -797,10 +842,15 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
           }}
         >
           {/* Finder App */}
-          <div
+          <button
+            type="button"
             onClick={openFinder}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") openFinder();
+            }}
             style={{ width: "38px", height: "38px" }}
             className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
+            aria-label="Open Finder"
           >
             <div className="w-full h-full bg-gradient-to-tr from-[#3a5ba8] via-[#5a9ad8] to-[#9ad6ff] rounded-lg border border-white/50 shadow-md flex items-center justify-center overflow-hidden">
               <div className="w-full h-full relative flex items-center justify-center">
@@ -813,13 +863,18 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             <div
               className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "finder-root") ? "opacity-100" : "opacity-0"}`}
             />
-          </div>
+          </button>
 
           {/* Browser App */}
-          <div
+          <button
+            type="button"
             onClick={() => openBrowser()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") openBrowser();
+            }}
             style={{ width: "38px", height: "38px" }}
             className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
+            aria-label="Open Safari"
           >
             <div
               className="w-full h-full rounded-full border border-white/40 shadow-lg flex items-center justify-center overflow-hidden relative"
@@ -865,13 +920,18 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             <div
               className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "browser") ? "opacity-100" : "opacity-0"}`}
             />
-          </div>
+          </button>
 
           {/* Mail App */}
-          <div
+          <button
+            type="button"
             onClick={openMail}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") openMail();
+            }}
             style={{ width: "38px", height: "38px" }}
             className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
+            aria-label="Open Mail"
           >
             <div className="w-full h-full bg-gradient-to-tr from-[#f6f6f6] via-[#fff] to-[#eee] rounded-lg border border-white/50 shadow-md flex items-center justify-center overflow-hidden">
               <div className="w-full h-full relative flex items-center justify-center">
@@ -884,13 +944,18 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             <div
               className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "mail") ? "opacity-100" : "opacity-0"}`}
             />
-          </div>
+          </button>
 
           {/* Settings App */}
-          <div
+          <button
+            type="button"
             onClick={openSettings}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") openSettings();
+            }}
             style={{ width: "38px", height: "38px" }}
             className="group relative flex items-center justify-center cursor-pointer hover:scale-125 transition-all duration-300 origin-bottom"
+            aria-label="Open Settings"
           >
             <div className="w-full h-full bg-gradient-to-tr from-[#999] via-[#ccc] to-[#eee] rounded-lg border border-white/50 shadow-md flex items-center justify-center overflow-hidden">
               <div className="w-full h-full relative flex items-center justify-center">
@@ -903,7 +968,7 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
             <div
               className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px] border-l-transparent border-r-transparent border-b-black/90 transition-opacity duration-300 ${windows.find((w) => w.id === "settings") ? "opacity-100" : "opacity-0"}`}
             />
-          </div>
+          </button>
         </div>
       </div>
     </div>

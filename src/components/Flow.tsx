@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
 import { motion, type Variants } from "framer-motion";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 const LQ_IMAGES_JSON = "/lqImages.json";
 const COLUMN_COUNT = 4;
@@ -61,12 +62,12 @@ const Flow: React.FC = () => {
     >
       {columns.map((col, idx) => (
         <div
-          key={idx}
+          key={`col-${idx}`}
           className={`flex-1 flex flex-col gap-3 md:gap-8 ${idx % 2 === 1 ? "mt-8 md:mt-12" : ""} ${idx >= 2 ? "hidden md:flex" : ""}`}
         >
           {col.map((img, i) => (
             <motion.div
-              key={i}
+              key={img}
               variants={item}
               className="relative w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-zinc-200 dark:bg-zinc-900 shadow-sm border border-black/5 dark:border-white/5"
               style={{
@@ -80,7 +81,7 @@ const Flow: React.FC = () => {
             >
               <img
                 src={img}
-                alt=""
+                alt="Photography gallery item"
                 className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
                 loading="lazy"
               />

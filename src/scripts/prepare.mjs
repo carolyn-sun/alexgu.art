@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 console.log("Starting preparation...");
 
@@ -26,7 +26,7 @@ execSync("node src/scripts/generate-lq-json.mjs", { stdio: "inherit" });
 console.log("Syncing to R2 via rclone...");
 try {
   execSync("src/scripts/rclone-to-r2.sh", { stdio: "inherit" });
-} catch (e) {
+} catch (_e) {
   console.warn("Rclone sync failed, falling back to wrangler sync...");
   execSync("src/scripts/wrangler-to-r2.sh", { stdio: "inherit" });
 }

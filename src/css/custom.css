@@ -68,6 +68,6 @@ table,
 code,
 pre,
 .code-block {
-  font-family: "Saira Variable", monospace !important;
-  font-weight: 600 !important;
+  font-family: "Saira Variable", monospace;
+  font-weight: 600;
 }

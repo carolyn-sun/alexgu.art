@@ -1,8 +1,8 @@
-import { defineConfig } from "astro/config";
-import react from "@astrojs/react";
-import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "astro/config";
 import remarkDirective from "remark-directive";
 import { visit } from "unist-util-visit";
 import { remarkAutoPhoto } from "./src/plugins/remark-photo.mjs";
@@ -15,7 +15,8 @@ function remarkAdmonitions() {
         node.type === "leafDirective" ||
         node.type === "textDirective"
       ) {
-        const data = node.data || (node.data = {});
+        if (!node.data) node.data = {};
+        const data = node.data;
         const tagName = node.type === "textDirective" ? "span" : "div";
 
         data.hName = tagName;

@@ -1,6 +1,6 @@
-import { readdir, readFile, writeFile, stat, access } from "fs/promises";
-import { join, extname, basename } from "path";
-import { exec } from "child_process";
+import { exec } from "node:child_process";
+import { access, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { basename, extname, join } from "node:path";
 import exifr from "exifr";
 
 const DOC_DIR = "docs";

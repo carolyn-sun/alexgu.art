@@ -40,8 +40,8 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 700;
-  margin-top: 6rem !important;
-  margin-bottom: 2.5rem !important;
+  margin-top: 6rem;
+  margin-bottom: 2.5rem;
 }
 
 .prose h2 {
@@ -63,7 +63,7 @@ body {
 .prose p {
   line-height: 2;
   font-size: 1.1rem;
-  margin-bottom: 2.5rem !important;
+  margin-bottom: 2.5rem;
 }
 
 /* Fix Inline Code Block Visibility */
@@ -77,7 +77,7 @@ body {
 }
 
 .prose pre {
-  background-color: var(--color-zinc-50) !important;
+  background-color: var(--color-zinc-50);
   border: 1px solid var(--color-zinc-200);
   border-radius: 12px;
 }
@@ -99,7 +99,7 @@ body {
   }
 
   .prose pre {
-    background-color: rgba(255, 255, 255, 0.03) !important;
+    background-color: rgba(255, 255, 255, 0.03);
     border-color: rgba(255, 255, 255, 0.1);
   }
 }
