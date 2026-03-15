@@ -346,11 +346,50 @@ const MacOSWindow: React.FC<WindowProps> = ({
             </div>
             {/* Browser Content */}
             <div className="flex-1 bg-white relative">
+              {content.isLoading && (
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="mb-4 text-[#3855a2]">
+                    <svg className="animate-spin h-8 w-8" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-[#333] mb-2">
+                    Connecting...
+                  </h3>
+                  <p className="text-[12px] text-[#666] max-w-[300px]">
+                    Note: Some websites (like Google or GitHub) block being
+                    displayed inside other sites. If this screen persists,
+                    please click below:
+                  </p>
+                  <a
+                    href={content.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 px-4 py-2 bg-[#3855a2] text-white rounded-lg text-[13px] font-bold hover:bg-[#2a448a] transition-colors shadow-lg"
+                  >
+                    Open in New Tab
+                  </a>
+                </div>
+              )}
               <iframe
                 src={content.url}
                 className="w-full h-full border-none"
                 sandbox="allow-scripts allow-same-origin allow-forms"
                 title="Browser View"
+                onLoad={() => content.onLoaded()}
               />
             </div>
           </div>
@@ -623,11 +662,24 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
           type: "browser",
           content: {
             url,
+            isLoading: true,
             onNavigate: (newUrl: string) => {
               setWindows((prevWins) =>
                 prevWins.map((w) =>
                   w.id === id
-                    ? { ...w, content: { ...w.content, url: newUrl } }
+                    ? {
+                        ...w,
+                        content: { ...w.content, url: newUrl, isLoading: true },
+                      }
+                    : w,
+                ),
+              );
+            },
+            onLoaded: () => {
+              setWindows((prevWins) =>
+                prevWins.map((w) =>
+                  w.id === id
+                    ? { ...w, content: { ...w.content, isLoading: false } }
                     : w,
                 ),
               );
