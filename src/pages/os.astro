@@ -1,9 +1,9 @@
 ---
-import OSLayout from "../layouts/OSLayout.astro";
-import MacOSSimulation from "../components/MacOSSimulation.tsx";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import MacOSSimulation from "../components/MacOSSimulation.tsx";
+import OSLayout from "../layouts/OSLayout.astro";
 
 // Async data fetch for the OS simulation
 async function getOSData() {
