@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import remarkDirective from "remark-directive";
 import { visit } from "unist-util-visit";
+import { remarkAutoPhoto } from "./src/plugins/remark-photo.mjs";
 
 function remarkAdmonitions() {
   return (tree) => {
@@ -30,7 +31,7 @@ function remarkAdmonitions() {
 export default defineConfig({
   integrations: [react(), mdx()],
   markdown: {
-    remarkPlugins: [remarkDirective, remarkAdmonitions],
+    remarkPlugins: [remarkDirective, remarkAdmonitions, remarkAutoPhoto],
   },
   vite: {
     plugins: [tailwindcss()],
