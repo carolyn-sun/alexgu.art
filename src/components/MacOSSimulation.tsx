@@ -1,10 +1,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+interface ExifData {
+  [key: string]: unknown;
+  date?: string;
+}
 
 interface Photo {
   name: string;
   url: string;
+  exif?: ExifData | null;
 }
 
 interface Gallery {
@@ -14,15 +20,48 @@ interface Gallery {
   photos: Photo[];
 }
 
-interface WindowProps {
+type WindowType =
+  | "folder"
+  | "preview"
+  | "root"
+  | "settings"
+  | "mail"
+  | "browser";
+
+interface BackgroundSetting {
+  type: "color" | "image";
+  val: string;
+}
+
+interface WindowContent {
+  photos?: Photo[];
+  galleries?: Gallery[];
+  allPhotos?: Photo[];
+  onOpenPhoto?: (p: Photo) => void;
+  onOpenFolder?: (g: Gallery) => void;
+  onSetBg?: (bg: BackgroundSetting) => void;
+  email?: string;
+  url?: string;
+  isLoading?: boolean;
+  onNavigate?: (url: string) => void;
+  onLoaded?: () => void;
+  // Photo preview fields
+  name?: string;
+  exif?: ExifData | null;
+}
+
+interface WindowState {
   id: string;
   title: string;
-  type: "folder" | "preview" | "root" | "settings" | "mail" | "browser";
-  content: any;
+  type: WindowType;
+  content: WindowContent;
   zIndex: number;
+  initialPos: { x: number; y: number };
+}
+
+interface WindowProps extends WindowState {
   onClose: (id: string) => void;
   onFocus: (id: string) => void;
-  initialPos: { x: number; y: number };
 }
 
 const MacOSWindow: React.FC<WindowProps> = ({
@@ -136,14 +175,14 @@ const MacOSWindow: React.FC<WindowProps> = ({
       <div className="flex-1 overflow-auto bg-white relative p-6 pointer-events-auto">
         {type === "folder" ? (
           <div className="grid grid-cols-4 gap-6">
-            {content.photos.map((photo: Photo) => (
+            {(content.photos ?? []).map((photo: Photo) => (
               <button
                 key={photo.url}
                 type="button"
                 className="flex flex-col items-center gap-2 group cursor-pointer"
                 onDoubleClick={(e) => {
                   e.stopPropagation();
-                  content.onOpenPhoto(photo);
+                  content.onOpenPhoto?.(photo);
                 }}
               >
                 <div className="w-24 h-24 bg-white border border-[#ccc] shadow-sm flex items-center justify-center p-1 group-hover:border-[#3855a2] group-hover:shadow-md transition-all">
@@ -161,12 +200,12 @@ const MacOSWindow: React.FC<WindowProps> = ({
           </div>
         ) : type === "root" ? (
           <div className="grid grid-cols-4 gap-8">
-            {content.galleries.map((g: Gallery) => (
+            {(content.galleries ?? []).map((g: Gallery) => (
               <button
                 key={g.slug}
                 type="button"
                 className="flex flex-col items-center gap-2 group cursor-pointer"
-                onDoubleClick={() => content.onOpenFolder(g)}
+                onDoubleClick={() => content.onOpenFolder?.(g)}
               >
                 <div className="w-16 h-16 relative flex items-center justify-center">
                   <svg
@@ -216,7 +255,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                     key={c.color}
                     type="button"
                     onClick={() =>
-                      content.onSetBg({ type: "color", val: c.color })
+                      content.onSetBg?.({ type: "color", val: c.color })
                     }
                     className="flex flex-col items-center gap-1 group"
                   >
@@ -237,12 +276,12 @@ const MacOSWindow: React.FC<WindowProps> = ({
                 Photography Wallpapers
               </h4>
               <div className="grid grid-cols-4 gap-4 overflow-auto pr-2 pb-4 h-full">
-                {content.allPhotos.map((p: Photo) => (
+                {(content.allPhotos ?? []).map((p: Photo) => (
                   <button
                     key={p.url}
                     type="button"
                     onClick={() =>
-                      content.onSetBg({ type: "image", val: p.url })
+                      content.onSetBg?.({ type: "image", val: p.url })
                     }
                     className="flex flex-col items-center gap-1 group border border-transparent hover:border-blue-500 p-1"
                   >
@@ -353,7 +392,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
                       const target = e.target as HTMLInputElement;
                       let url = target.value;
                       if (!url.startsWith("http")) url = `https://${url}`;
-                      content.onNavigate(url);
+                      content.onNavigate?.(url);
                     }
                   }}
                   className="w-full h-7 border border-[#999] rounded text-[12px] px-3 shadow-inner bg-white focus:outline-none focus:ring-1 focus:ring-[#3855a2]"
@@ -361,7 +400,7 @@ const MacOSWindow: React.FC<WindowProps> = ({
               </div>
               <button
                 type="button"
-                onClick={() => content.onNavigate(content.url)}
+                onClick={() => content.onNavigate?.(content.url ?? "")}
                 className="w-6 h-6 rounded border border-[#999] bg-white flex items-center justify-center text-[#444] hover:bg-gray-50 active:bg-gray-100 shadow-sm transition-colors"
               >
                 <span className="text-[10px]">↻</span>
@@ -416,9 +455,9 @@ const MacOSWindow: React.FC<WindowProps> = ({
               <iframe
                 src={content.url}
                 className="w-full h-full border-none"
-                sandbox="allow-scripts allow-same-origin allow-forms"
+                sandbox="allow-scripts allow-forms allow-popups"
                 title="Browser View"
-                onLoad={() => content.onLoaded()}
+                onLoad={() => content.onLoaded?.()}
               />
             </div>
           </div>
@@ -500,7 +539,9 @@ const MacOSWindow: React.FC<WindowProps> = ({
         <button
           type="button"
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") startResize(e as any);
+            // Resize via keyboard is not meaningful (no pointer position);
+            // just prevent default scroll on space.
+            if (e.key === " ") e.preventDefault();
           }}
           onMouseDown={startResize}
           className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize z-[100] flex items-end justify-end p-0.5 group"
@@ -514,15 +555,17 @@ const MacOSWindow: React.FC<WindowProps> = ({
 };
 
 const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
-  const [windows, setWindows] = useState<any[]>([]);
+  const [windows, setWindows] = useState<WindowState[]>([]);
   const [time, setTime] = useState(new Date());
-  const [, setMaxZ] = useState(100);
-  const [background, setBackground] = useState(() => {
+  // zIndex counter — useRef instead of useState because we never render it
+  // directly; it's only used to compute monotonically increasing z values.
+  const maxZRef = useRef(100);
+  const [background, setBackground] = useState<BackgroundSetting>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("macos-simulation-bg");
       if (saved) {
         try {
-          return JSON.parse(saved);
+          return JSON.parse(saved) as BackgroundSetting;
         } catch (_e) {
           console.error("Failed to parse background");
         }
@@ -536,196 +579,159 @@ const MacOSSimulation: React.FC<{ galleries: Gallery[] }> = ({ galleries }) => {
     return () => clearInterval(timer);
   }, []);
 
-  const updateBackground = (newBg: any) => {
+  const updateBackground = useCallback((newBg: BackgroundSetting) => {
     setBackground(newBg);
     localStorage.setItem("macos-simulation-bg", JSON.stringify(newBg));
-  };
-
-  const onFocus = useCallback((id: string) => {
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) =>
-        wins.map((w) => (w.id === id ? { ...w, zIndex: newZ } : w)),
-      );
-      return newZ;
-    });
   }, []);
 
-  const openFolder = (gallery: Gallery) => {
-    const id = `folder-${gallery.slug}`;
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
+  const onFocus = useCallback((id: string) => {
+    const newZ = ++maxZRef.current;
+    setWindows((wins) =>
+      wins.map((w) => (w.id === id ? { ...w, zIndex: newZ } : w)),
+    );
+  }, []);
 
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: gallery.title,
-          type: "folder",
-          content: {
-            photos: gallery.photos,
-            onOpenPhoto: (p: Photo) => openPhoto(p),
-          },
-          initialPos: { x: 80 + wins.length * 30, y: 80 + wins.length * 30 },
-          zIndex: newZ,
+  // Helper: open-or-focus. All dedup is done inside setWindows' functional
+  // update so rapid double-clicks in the same render tick can't create
+  // duplicate windows.
+  const openWindow = useCallback(
+    (build: (wins: WindowState[]) => WindowState) => {
+      setWindows((wins) => {
+        const draft = build(wins);
+        const existing = wins.find((w) => w.id === draft.id);
+        if (existing) {
+          // Focus existing window instead of opening a duplicate.
+          const newZ = ++maxZRef.current;
+          return wins.map((w) =>
+            w.id === draft.id ? { ...w, zIndex: newZ } : w,
+          );
+        }
+        const newZ = ++maxZRef.current;
+        return [...wins, { ...draft, zIndex: newZ }];
+      });
+    },
+    [],
+  );
+
+  const openPhoto = useCallback(
+    (photo: Photo) => {
+      openWindow((wins) => ({
+        id: `photo-${photo.url}`,
+        title: photo.name,
+        type: "preview",
+        content: {
+          name: photo.name,
+          url: photo.url,
+          exif: photo.exif,
         },
-      ]);
-      return newZ;
-    });
-  };
-
-  const openPhoto = (photo: Photo) => {
-    const id = `photo-${photo.url}`;
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
-
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: photo.name,
-          type: "preview",
-          content: photo,
-          initialPos: { x: 140 + wins.length * 30, y: 100 + wins.length * 30 },
-          zIndex: newZ,
+        initialPos: {
+          x: 140 + wins.length * 30,
+          y: 100 + wins.length * 30,
         },
-      ]);
-      return newZ;
-    });
-  };
+        zIndex: 0,
+      }));
+    },
+    [openWindow],
+  );
 
-  const openFinder = () => {
-    const id = "finder-root";
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
-
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: "Desktop",
-          type: "root", // New type for all folders
-          content: {
-            galleries,
-            onOpenFolder: (g: Gallery) => openFolder(g),
-          },
-          initialPos: { x: 40, y: 40 },
-          zIndex: newZ,
+  const openFolder = useCallback(
+    (gallery: Gallery) => {
+      openWindow((_wins) => ({
+        id: `folder-${gallery.slug}`,
+        title: gallery.title,
+        type: "folder",
+        content: {
+          photos: gallery.photos,
+          onOpenPhoto: (p: Photo) => openPhoto(p),
         },
-      ]);
-      return newZ;
-    });
-  };
+        initialPos: {
+          x: 80 + _wins.length * 30,
+          y: 80 + _wins.length * 30,
+        },
+        zIndex: 0,
+      }));
+    },
+    [openWindow, openPhoto],
+  );
 
-  const openSettings = () => {
-    const id = "settings";
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
+  const openFinder = useCallback(() => {
+    openWindow(() => ({
+      id: "finder-root",
+      title: "Desktop",
+      type: "root",
+      content: {
+        galleries,
+        onOpenFolder: (g: Gallery) => openFolder(g),
+      },
+      initialPos: { x: 40, y: 40 },
+      zIndex: 0,
+    }));
+  }, [galleries, openFolder, openWindow]);
+
+  const openSettings = useCallback(() => {
     const allPhotos = galleries.flatMap((g) => g.photos);
+    openWindow(() => ({
+      id: "settings",
+      title: "System Preferences",
+      type: "settings",
+      content: {
+        allPhotos,
+        onSetBg: (bg: BackgroundSetting) => updateBackground(bg),
+      },
+      initialPos: { x: 100, y: 100 },
+      zIndex: 0,
+    }));
+  }, [galleries, openWindow, updateBackground]);
 
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: "System Preferences",
-          type: "settings",
-          content: {
-            allPhotos,
-            onSetBg: (bg: any) => updateBackground(bg),
+  const openMail = useCallback(() => {
+    openWindow(() => ({
+      id: "mail",
+      title: "Mail",
+      type: "mail",
+      content: { email: "gjc78263@gmail.com" },
+      initialPos: { x: 120, y: 120 },
+      zIndex: 0,
+    }));
+  }, [openWindow]);
+
+  const openBrowser = useCallback(
+    (url: string = "https://alexgu.art") => {
+      const id = "browser";
+      openWindow(() => ({
+        id,
+        title: "Safari",
+        type: "browser",
+        content: {
+          url,
+          isLoading: true,
+          onNavigate: (newUrl: string) => {
+            setWindows((prevWins) =>
+              prevWins.map((w) =>
+                w.id === id
+                  ? {
+                      ...w,
+                      content: { ...w.content, url: newUrl, isLoading: true },
+                    }
+                  : w,
+              ),
+            );
           },
-          initialPos: { x: 100, y: 100 },
-          zIndex: newZ,
-        },
-      ]);
-      return newZ;
-    });
-  };
-
-  const openMail = () => {
-    const id = "mail";
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: "Mail",
-          type: "mail",
-          content: { email: "gjc78263@gmail.com" },
-          initialPos: { x: 120, y: 120 },
-          zIndex: newZ,
-        },
-      ]);
-      return newZ;
-    });
-  };
-
-  const openBrowser = (url: string = "https://alexgu.art") => {
-    const id = "browser";
-    if (windows.find((w) => w.id === id)) {
-      onFocus(id);
-      return;
-    }
-    setMaxZ((prev) => {
-      const newZ = prev + 1;
-      setWindows((wins) => [
-        ...wins,
-        {
-          id,
-          title: "Safari",
-          type: "browser",
-          content: {
-            url,
-            isLoading: true,
-            onNavigate: (newUrl: string) => {
-              setWindows((prevWins) =>
-                prevWins.map((w) =>
-                  w.id === id
-                    ? {
-                        ...w,
-                        content: { ...w.content, url: newUrl, isLoading: true },
-                      }
-                    : w,
-                ),
-              );
-            },
-            onLoaded: () => {
-              setWindows((prevWins) =>
-                prevWins.map((w) =>
-                  w.id === id
-                    ? { ...w, content: { ...w.content, isLoading: false } }
-                    : w,
-                ),
-              );
-            },
+          onLoaded: () => {
+            setWindows((prevWins) =>
+              prevWins.map((w) =>
+                w.id === id
+                  ? { ...w, content: { ...w.content, isLoading: false } }
+                  : w,
+              ),
+            );
           },
-          initialPos: { x: 60, y: 60 },
-          zIndex: newZ,
         },
-      ]);
-      return newZ;
-    });
-  };
+        initialPos: { x: 60, y: 60 },
+        zIndex: 0,
+      }));
+    },
+    [openWindow],
+  );
 
   const onClose = (id: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== id));

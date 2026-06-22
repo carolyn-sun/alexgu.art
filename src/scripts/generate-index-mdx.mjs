@@ -1,5 +1,5 @@
 import { exec } from "node:child_process";
-import { access, readdir, writeFile } from "node:fs/promises";
+import { access, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 
 const DOCS_DIR = "docs";
@@ -12,6 +12,21 @@ async function fileExists(path) {
   } catch {
     return false;
   }
+}
+
+async function getFirstPhotoDate(folder, baseNames) {
+  for (const base of Array.from(baseNames).sort()) {
+    const jsonPath = join(folder, `${base}.json`);
+    if (await fileExists(jsonPath)) {
+      try {
+        const json = JSON.parse(await readFile(jsonPath, "utf-8"));
+        if (json.date) return json.date;
+      } catch {
+        // ignore parse errors, try next
+      }
+    }
+  }
+  return new Date().toISOString().split("T")[0];
 }
 
 async function shouldSkip(dir) {
@@ -67,13 +82,18 @@ async function processFolders(root) {
 
     if (baseNames.size === 0) continue;
 
+    const date = await getFirstPhotoDate(folder, baseNames);
+    const title = entry.name
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+
     const mdxLines = [
       `---`,
-      `title: "${entry.name.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}"`,
-      `date: ${new Date().toISOString().split("T")[0]}`,
+      `title: "${title}"`,
+      `date: ${date}`,
       `---`,
       ``,
-      `# ${entry.name.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}`,
+      `# ${title}`,
       ``,
     ];
 

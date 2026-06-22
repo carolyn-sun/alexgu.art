@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 
 function processFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -45,14 +46,22 @@ function processFile(filePath) {
   console.log(`Updated ${filePath}`);
 }
 
-const files = [
-  "docs/daily-photos-taken-by-film/index.mdx",
-  "docs/daily-photos-taken-by-gfx100s/index.mdx",
-  "docs/fall/index.mdx",
-  "docs/hajime-sorayama/index.mdx",
-  "docs/photo-ride-to-dhm/index.mdx",
-  "docs/photo-trip-to-america/index.mdx",
-  "docs/photo-trip-to-shengshan-island/index.mdx",
-];
+// Dynamically scan all docs/*/index.{md,mdx} instead of a hardcoded list.
+const docsDir = path.resolve("docs");
+if (fs.existsSync(docsDir)) {
+  const galleries = fs
+    .readdirSync(docsDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !e.name.startsWith("."))
+    .map((e) => e.name);
 
-files.forEach(processFile);
+  for (const gallery of galleries) {
+    for (const ext of ["mdx", "md"]) {
+      const idx = path.join(docsDir, gallery, `index.${ext}`);
+      if (fs.existsSync(idx)) {
+        processFile(idx);
+      }
+    }
+  }
+} else {
+  console.warn(`docs directory not found at ${docsDir}`);
+}

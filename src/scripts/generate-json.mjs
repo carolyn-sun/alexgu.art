@@ -27,6 +27,19 @@ const FIELDS = [
   "Copyright",
 ];
 
+function normalizeDate(exif) {
+  const raw = exif?.DateTimeOriginal ?? exif?.CreateDate ?? exif?.DateTime;
+  if (!raw) return null;
+  if (raw instanceof Date) {
+    return raw.toISOString().split("T")[0];
+  }
+  const parsed = new Date(raw);
+  if (!Number.isNaN(parsed.getTime())) {
+    return parsed.toISOString().split("T")[0];
+  }
+  return null;
+}
+
 async function fileExists(path) {
   try {
     await access(path);
@@ -92,6 +105,9 @@ async function processDir(dir) {
           filtered[key] = exif[key];
         }
       }
+
+      const date = normalizeDate(exif);
+      if (date) filtered.date = date;
 
       if (!filtered.Copyright) {
         filtered.Copyright = "Alexander Gu";

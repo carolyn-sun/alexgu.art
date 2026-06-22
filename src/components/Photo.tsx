@@ -22,6 +22,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
   const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const getExtractedLqip = () => {
     if (!lqip) return "";
     if (typeof lqip === "string") return lqip;
@@ -46,20 +47,25 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
         setImgSrc(getLqipSrc(json._pre_url));
       }
     }
+    // getExtractedLqip is derived from lqip; lqip is the relevant dep
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [json, lqip]);
 
   const handleClick = () => {
-    if (!showOriginal && src) {
+    if (!showOriginal && src && !loading) {
       setLoading(true);
+      setError(false);
       const originalImg = new window.Image();
       originalImg.src = src;
       originalImg.onload = () => {
         setImgSrc(src);
         setLoading(false);
         setShowOriginal(true);
+        setError(false);
       };
       originalImg.onerror = () => {
         setLoading(false);
+        setError(true);
       };
     }
   };
@@ -95,9 +101,9 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
               initial={{ opacity: 0, y: 10, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
               exit={{ opacity: 0, y: 10, x: "-50%" }}
-              className="absolute bottom-10 left-1/2 bg-white/10 backdrop-blur-xl text-white px-8 py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase z-10 pointer-events-none shadow-2xl border border-white/20"
+              className={`absolute bottom-10 left-1/2 backdrop-blur-xl text-white px-8 py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase z-10 pointer-events-none shadow-2xl border ${error ? "bg-red-500/30 border-red-400/40" : "bg-white/10 border-white/20"}`}
             >
-              Reveal High-Res
+              {error ? "Failed — Click to Retry" : "Reveal High-Res"}
             </motion.div>
           )}
         </AnimatePresence>

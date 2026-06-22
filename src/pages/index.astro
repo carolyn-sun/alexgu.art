@@ -24,7 +24,8 @@ const galleries = await Promise.all(
         .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
 
-    // Find first photo for cover
+    // Find first photo for cover.
+    // Supports both new Markdown syntax ![..](./name) and legacy JSX <Photo json={var} />
     let coverUrl = null;
     try {
       const absMdxPath = path.join(
@@ -35,21 +36,34 @@ const galleries = await Promise.all(
       );
       const content = await fs.readFile(absMdxPath, "utf-8");
 
-      const photoMatch = content.match(/<Photo.*?json={(\w+)}/);
-      if (photoMatch) {
-        const varName = photoMatch[1];
-        const importRegex = new RegExp(
-          `import\\s+${varName}\\s+from\\s+["'](.*?\\.json)["']`,
+      // Primary: Markdown image syntax ![alt](./basename)
+      const mdImageMatch = content.match(/!\[[^\]]*\]\(\.\/?([^)\s]+)/);
+      if (mdImageMatch) {
+        const baseName = mdImageMatch[1].replace(
+          /\.(jpe?g|png|webp|gif|tiff?|heic)$/i,
+          "",
         );
-        const importMatch = content.match(importRegex);
-        if (importMatch) {
-          const jsonFileName = importMatch[1];
-          const baseName = path.basename(jsonFileName, ".json");
-          coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
+        coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
+      }
+
+      // Fallback: legacy JSX <Photo json={var} />
+      if (!coverUrl) {
+        const photoMatch = content.match(/<Photo.*?json={(\w+)}/);
+        if (photoMatch) {
+          const varName = photoMatch[1];
+          const importRegex = new RegExp(
+            `import\\s+${varName}\\s+from\\s+["'](.*?\\.json)["']`,
+          );
+          const importMatch = content.match(importRegex);
+          if (importMatch) {
+            const jsonFileName = importMatch[1];
+            const baseName = path.basename(jsonFileName, ".json");
+            coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
+          }
         }
       }
 
-      // Fallback: first json in folder
+      // Final fallback: first json file in folder
       if (!coverUrl) {
         const files = await fs.readdir(
           path.join(process.cwd(), "docs", gallery),

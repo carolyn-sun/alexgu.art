@@ -1,7 +1,9 @@
 ---
+import fs from "node:fs/promises";
+import path from "node:path";
 import Layout from "../../layouts/Layout.astro";
+
 export async function getStaticPaths() {
-  const fs = await import("node:fs/promises");
   const docsDir = "docs";
   const entries = await fs.readdir(docsDir, { withFileTypes: true });
   const galleries = entries
@@ -30,6 +32,30 @@ const title =
     .split("-")
     .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+
+// Detect whether the gallery folder has any images even though it has no
+// index.mdx yet. This lets us render a helpful "preparing" state instead of
+// a silent blank page while the author hasn't run `npm run process`.
+let hasPendingPhotos = false;
+if (!Content) {
+  try {
+    const files = await fs.readdir(path.join(process.cwd(), "docs", gallery));
+    hasPendingPhotos = files.some(
+      (f) =>
+        /\.(jpe?g|png|webp|gif|tiff?|heic)$/i.test(f) &&
+        !/_lq\.jpe?g$/i.test(f),
+    );
+    if (!hasPendingPhotos) {
+      console.warn(
+        `[gallery/${gallery}] No index.mdx and no source photos in docs/${gallery}`,
+      );
+    }
+  } catch (_e) {
+    console.warn(
+      `[gallery/${gallery}] Directory not readable: docs/${gallery}`,
+    );
+  }
+}
 ---
 
 <Layout title={`${title} | Alexander Gu`}>
@@ -63,6 +89,21 @@ const title =
     Content && (
       <div class="prose prose-zinc dark:prose-invert max-w-none text-zinc-900 dark:text-zinc-50 mt-32">
         <Content components={{ h1: () => null }} />
+      </div>
+    )
+  }
+
+  {
+    !Content && (
+      <div class="mt-32 p-16 rounded-3xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-100/30 dark:bg-zinc-900/10 text-center">
+        <p class="text-zinc-400 dark:text-zinc-500 font-bold tracking-[0.3em] uppercase text-[10px]">
+          {hasPendingPhotos ? "Gallery is being prepared" : "No photos yet"}
+        </p>
+        <p class="mt-6 text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed max-w-md mx-auto">
+          {hasPendingPhotos
+            ? "Photos are waiting to be processed. Run `npm run process` to generate the gallery."
+            : "This series doesn't have an index yet."}
+        </p>
       </div>
     )
   }
