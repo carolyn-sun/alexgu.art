@@ -91,6 +91,7 @@ async function processFolders(root) {
       `---`,
       `title: "${title}"`,
       `date: ${date}`,
+      `description: ""`,
       `---`,
       ``,
       `# ${title}`,

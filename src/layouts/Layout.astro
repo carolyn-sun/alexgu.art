@@ -6,9 +6,21 @@ import "../styles/global.css";
 
 interface Props {
   title: string;
+  description?: string;
+  ogImage?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Alexander Gu's Photography Portfolio",
+  ogImage,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site) : null;
+// Keep the site name as the page-level H1 only on the home page; other routes
+// render their own H1.
+const SiteTitleTag = Astro.url.pathname === "/" ? "h1" : "p";
 
 // Preload critical fonts to prevent FOUT
 import montserratUrl from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url";
@@ -19,9 +31,28 @@ import sairaUrl from "@fontsource-variable/saira/files/saira-latin-wght-normal.w
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Alexander Gu's Photography Portfolio" />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <!-- Twitter Card -->
+    <meta
+      name="twitter:card"
+      content={ogImageUrl ? "summary_large_image" : "summary"}
+    />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    <slot name="head" />
 
     <!-- Font Preloads -->
     <link
@@ -70,14 +101,14 @@ import sairaUrl from "@fontsource-variable/saira/files/saira-latin-wght-normal.w
       class="py-24 px-6 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8"
     >
       <div>
-        <h1
+        <SiteTitleTag
           class="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none"
           style="font-family: 'Montserrat Variable', sans-serif;"
         >
           <a href="/" class="hover:opacity-60 transition-all duration-500"
             >Alexander Gu</a
           >
-        </h1>
+        </SiteTitleTag>
         <p
           class="mt-4 text-zinc-400 dark:text-zinc-600 font-black tracking-[0.4em] text-xs uppercase"
         >

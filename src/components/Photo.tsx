@@ -10,6 +10,7 @@ interface ExifData {
 interface PhotoProps {
   lqip?: string | { src: string };
   json: ExifData;
+  alt?: string;
 }
 
 const getLqipSrc = (src: string) => {
@@ -18,7 +19,7 @@ const getLqipSrc = (src: string) => {
   return `${src.slice(0, extIdx)}_lq.jpeg`;
 };
 
-const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
+const Photo: React.FC<PhotoProps> = ({ lqip, json, alt }) => {
   const [src, setSrc] = useState<string>("");
   const [showOriginal, setShowOriginal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +79,7 @@ const Photo: React.FC<PhotoProps> = ({ lqip, json }) => {
       >
         <motion.img
           src={imgSrc}
-          alt="Photography gallery item"
+          alt={alt?.trim() || "Photography by Alexander Gu"}
           className="w-full h-auto block"
           style={{
             cursor: showOriginal ? "default" : "pointer",

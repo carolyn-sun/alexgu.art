@@ -45,6 +45,20 @@ export function remarkAutoPhoto() {
       if (src && (src.startsWith("./") || src.startsWith("../"))) {
         const base = src.replace(/\.(json|jpeg|jpg|png|webp|gif)$/, "");
 
+        // Alt pipeline: author-provided MDX alt wins; otherwise fall back to
+        // the series title derived from the gallery directory name (same
+        // slug→title rule as the site pages).
+        let alt = (node.alt || "").trim();
+        if (!alt && file?.path) {
+          const dirName = path.basename(path.dirname(file.path));
+          if (dirName) {
+            alt = dirName
+              .split("-")
+              .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(" ");
+          }
+        }
+
         photoIndex++;
         const jsonVar = `PhotoJson_${photoIndex}`;
         const lqipVar = `PhotoLqip_${photoIndex}`;
@@ -92,11 +106,41 @@ export function remarkAutoPhoto() {
           data: { estree },
         });
 
+        const altAttribute = alt
+          ? [
+              {
+                type: "mdxJsxAttribute",
+                name: "alt",
+                value: {
+                  type: "mdxJsxAttributeValueExpression",
+                  value: JSON.stringify(alt),
+                  data: {
+                    estree: {
+                      type: "Program",
+                      body: [
+                        {
+                          type: "ExpressionStatement",
+                          expression: {
+                            type: "Literal",
+                            value: alt,
+                            raw: JSON.stringify(alt),
+                          },
+                        },
+                      ],
+                      sourceType: "module",
+                    },
+                  },
+                },
+              },
+            ]
+          : [];
+
         const photoNode = {
           type: "mdxJsxFlowElement",
           name: "Photo",
           attributes: [
             { type: "mdxJsxAttribute", name: "client:visible" },
+            ...altAttribute,
             {
               type: "mdxJsxAttribute",
               name: "json",

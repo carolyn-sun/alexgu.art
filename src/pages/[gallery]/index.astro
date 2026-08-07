@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import Layout from "../../layouts/Layout.astro";
+import { getGalleryCover, slugToTitle } from "../../utils/gallery-meta";
 
 export async function getStaticPaths() {
   const docsDir = "docs";
@@ -26,12 +27,15 @@ const docKey = Object.keys(allDocs).find((k) =>
 const doc = docKey ? (allDocs[docKey] as any) : null;
 const Content = doc ? doc.Content : null;
 const frontmatter = doc ? doc.frontmatter : {};
-const title =
-  frontmatter.title ||
-  gallery
-    .split("-")
-    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+const title = frontmatter.title || slugToTitle(gallery);
+const description =
+  frontmatter.description || `${title} — photography series by Alexander Gu`;
+const coverUrl = docKey
+  ? await getGalleryCover(
+      gallery,
+      docKey.endsWith(".md") ? "index.md" : "index.mdx",
+    )
+  : null;
 
 // Detect whether the gallery folder has any images even though it has no
 // index.mdx yet. This lets us render a helpful "preparing" state instead of
@@ -58,7 +62,11 @@ if (!Content) {
 }
 ---
 
-<Layout title={`${title} | Alexander Gu`}>
+<Layout
+  title={`${title} | Alexander Gu`}
+  description={description}
+  ogImage={coverUrl ?? undefined}
+>
   <div class="mb-24">
     <a
       href="/"

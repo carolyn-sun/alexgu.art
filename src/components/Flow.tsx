@@ -13,6 +13,17 @@ function shuffle<T>(arr: T[]): T[] {
     .map(([, v]) => v);
 }
 
+// "/docs/<slug>/<base>_lq.jpeg" → series title from the gallery slug (same
+// slug→title rule as the site pages).
+function altFromPath(img: string): string {
+  const slug = img.split("/")[2];
+  if (!slug) return "Photography by Alexander Gu";
+  return slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 const Flow: React.FC = () => {
   const [columns, setColumns] = useState<string[][]>([]);
 
@@ -81,7 +92,7 @@ const Flow: React.FC = () => {
             >
               <img
                 src={img}
-                alt="Photography gallery item"
+                alt={altFromPath(img)}
                 className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
                 loading="lazy"
               />

@@ -1,8 +1,31 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const meDescription =
+  "Alexander Gu — analog enthusiast and photographer focusing on the tactile nature of film. Explore the transition between light and silver halide.";
+// JSON-LD fields mirror visible content on this page only.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Alexander Gu",
+  url: new URL("/me", Astro.site).href,
+  image: new URL("/img/avatar.jpg", Astro.site).href,
+  email: "mailto:gjc78263@gmail.com",
+  description:
+    "Analog enthusiast and photographer focusing on the tactile nature of film.",
+};
 ---
 
-<Layout title="Alexander Gu | About">
+<Layout
+  title="Alexander Gu | About"
+  description={meDescription}
+  ogImage="/img/avatar.jpg"
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify(personJsonLd)}
+  />
   <div class="max-w-3xl mx-auto py-12">
     <a
       href="/"

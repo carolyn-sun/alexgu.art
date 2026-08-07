@@ -1,89 +1,19 @@
 ---
-import fs from "node:fs/promises";
-import path from "node:path";
 import Flow from "../components/Flow.tsx";
 import Layout from "../layouts/Layout.astro";
+import { getGalleries, pickDefaultOgImage } from "../utils/gallery-meta";
 
-interface MdxDoc {
-  frontmatter: {
-    title?: string;
-  };
-}
-
-const allDocs = import.meta.glob("../../docs/**/index.{md,mdx}", {
-  eager: true,
-}) as Record<string, MdxDoc>;
-
-const galleries = await Promise.all(
-  Object.entries(allDocs).map(async ([mdxKey, doc]) => {
-    const gallery = mdxKey.split("/").slice(-2, -1)[0];
-    const title =
-      doc.frontmatter.title ||
-      gallery
-        .split("-")
-        .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-
-    // Find first photo for cover.
-    // Supports both new Markdown syntax ![..](./name) and legacy JSX <Photo json={var} />
-    let coverUrl = null;
-    try {
-      const absMdxPath = path.join(
-        process.cwd(),
-        "docs",
-        gallery,
-        mdxKey.endsWith(".md") ? "index.md" : "index.mdx",
-      );
-      const content = await fs.readFile(absMdxPath, "utf-8");
-
-      // Primary: Markdown image syntax ![alt](./basename)
-      const mdImageMatch = content.match(/!\[[^\]]*\]\(\.\/?([^)\s]+)/);
-      if (mdImageMatch) {
-        const baseName = mdImageMatch[1].replace(
-          /\.(jpe?g|png|webp|gif|tiff?|heic)$/i,
-          "",
-        );
-        coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
-      }
-
-      // Fallback: legacy JSX <Photo json={var} />
-      if (!coverUrl) {
-        const photoMatch = content.match(/<Photo.*?json={(\w+)}/);
-        if (photoMatch) {
-          const varName = photoMatch[1];
-          const importRegex = new RegExp(
-            `import\\s+${varName}\\s+from\\s+["'](.*?\\.json)["']`,
-          );
-          const importMatch = content.match(importRegex);
-          if (importMatch) {
-            const jsonFileName = importMatch[1];
-            const baseName = path.basename(jsonFileName, ".json");
-            coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
-          }
-        }
-      }
-
-      // Final fallback: first json file in folder
-      if (!coverUrl) {
-        const files = await fs.readdir(
-          path.join(process.cwd(), "docs", gallery),
-        );
-        const firstJson = files
-          .sort()
-          .find((f) => f.endsWith(".json") && f !== "package.json");
-        if (firstJson) {
-          const baseName = path.basename(firstJson, ".json");
-          coverUrl = `/docs/${gallery}/${baseName}_lq.jpeg`;
-        }
-      }
-    } catch (_e) {}
-
-    return { gallery, title, coverUrl };
-  }),
-);
+const galleries = await getGalleries();
+const homeOgImage = pickDefaultOgImage(galleries);
+const homeDescription =
+  "Alexander Gu's photography portfolio and archive — selected series on film and digital, from daily photos to photo trips and exhibitions.";
 ---
 
-<Layout title="Alexander Gu | Photography">
+<Layout
+  title="Alexander Gu | Photography"
+  description={homeDescription}
+  ogImage={homeOgImage ?? undefined}
+>
   <div class="mb-32">
     <Flow client:load />
     <div
@@ -132,9 +62,9 @@ const galleries = await Promise.all(
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
     {
-      galleries.map(({ gallery, title, coverUrl }) => (
+      galleries.map(({ slug, title, coverUrl }) => (
         <a
-          href={`/${gallery}`}
+          href={`/${slug}`}
           class="group relative block aspect-[16/10] overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900 shadow-2xl transition-all duration-700 hover:-translate-y-2 border border-black/5 dark:border-white/5"
         >
           <div class="absolute inset-0 z-0">
